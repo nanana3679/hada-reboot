@@ -1,0 +1,95 @@
+@use '@/styles/breakpoints' as bp;
+@use '@/styles/typography' as tp;
+
+.korean-container {
+  display: flex;
+  flex-direction: row;
+  padding: 0 12px;
+
+  .korean-word {
+    @include tp.headline-large;
+  }
+
+  .korean-homograph-number {
+    @include tp.headline-small;
+  }
+
+  .korean-info-container {
+    @include tp.label-large;
+  }
+
+  @include bp.respond-to('large') {
+    .korean-word {
+      @include tp.display-small;
+    }
+    .korean-homograph-number {
+      @include tp.headline-medium;
+    }
+    .korean-info-container {
+      @include tp.title-medium;
+    }
+  }
+
+  @include bp.respond-to('extra-large') {
+    .korean-word {
+      @include tp.display-medium;
+    }
+    .korean-homograph-number {
+      @include tp.display-small;
+    }
+    .korean-info-container {
+      @include tp.title-large;
+    }
+  }
+}
+
+.korean-info-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 6px;
+  color: #fa6e6e;
+}
+
+.korean-info-sub-container {
+  display: flex;
+  gap: 4px;
+
+  .pronunciation {
+    color: var(--md-sys-color-secondary);
+  }
+  .origin {
+    color: var(--md-sys-color-tertiary);
+  }
+}
+
+.foreign-container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  gap: 10px;
+
+  .foreign-word {
+    @include tp.body-large;
+
+    @include bp.respond-to('large') {
+      @include tp.title-large;
+    }
+
+    @include bp.respond-to('extra-large') {
+      @include tp.headline-small;
+    }
+  }
+
+  .foreign-word-sub {
+    padding-left: 0px;
+    @include tp.label-medium;
+
+    @include bp.respond-to('large') {
+      @include tp.title-medium;
+    }
+
+    @include bp.respond-to('extra-large') {
+      @include tp.title-large;
+    }
+  }
+}

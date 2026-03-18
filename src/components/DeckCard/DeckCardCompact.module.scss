@@ -1,0 +1,49 @@
+@use '@/styles/typography' as tp;
+
+.card {
+  height: 62px;
+  overflow: hidden;
+  border-radius: inherit;
+
+  .main-contents {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+
+    .title-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .title {
+        margin: 0 6px 0 0;
+        @include tp.body-large;
+      }
+
+      .check-icon {
+        color: green;
+        font-variation-settings: 'FILL' 1;
+      }
+    }
+  }
+}
+
+.card-expanded {
+  height: 108px;
+
+  .extra-contents {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 0 4;
+
+    .word-count {
+      margin: 0;
+      color: #555;
+      @include tp.label-small;
+    }
+  }
+}

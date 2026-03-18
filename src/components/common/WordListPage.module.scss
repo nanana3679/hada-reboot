@@ -1,0 +1,214 @@
+@use '@/styles/typography' as tp;
+@use '@/styles/breakpoints' as bp;
+
+.page {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: hidden;
+
+  @include bp.respond-to('compact') {
+    grid-column: span 4;
+    gap: 16px;
+  }
+
+  @include bp.respond-to('medium') {
+    grid-column: 2 / span 6;
+    gap: 16px;
+  }
+
+  @include bp.respond-to('expanded') {
+    grid-column: 3 / span 8;
+    gap: 24px;
+  }
+
+  @include bp.respond-to('large') {
+    grid-column: 3 / span 8;
+    gap: 24px;
+  }
+
+  @include bp.respond-to('extra-large') {
+    grid-column: 3 / span 8;
+    gap: 24px;
+  }
+}
+
+.content {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .header-container {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px;
+
+    @include bp.respond-to('compact') {
+      display: none;
+    }
+
+    @include bp.respond-to('medium') {
+      display: flex;
+    }
+
+    @include bp.respond-to('expanded') {
+      display: flex;
+    }
+
+    @include bp.respond-to('large') {
+      margin-bottom: 32px;
+    }
+
+    @include bp.respond-to('extra-large') {
+      margin-bottom: 48px;
+    }
+
+    .title {
+      margin: 0;
+
+      @include bp.respond-to('medium') {
+        @include tp.title-large;
+      }
+
+      @include bp.respond-to('expanded') {
+        @include tp.headline-small;
+      }
+
+      @include bp.respond-to('large') {
+        @include tp.headline-medium;
+      }
+
+      @include bp.respond-to('extra-large') {
+        @include tp.headline-large;
+      }
+    }
+
+    .button-container {
+      display: flex;
+
+      .learn-button {
+        margin-right: 12px;
+      }
+    }
+  }
+
+  .list-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 15px 0;
+    overflow-y: auto;
+    gap: 16px;
+
+    @include bp.respond-to('compact') {
+      gap: 12px;
+    }
+
+    @include bp.respond-to('medium') {
+      gap: 12px;
+    }
+
+    &::before {
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 15px;
+      background: linear-gradient(to bottom, var(--md-sys-color-surface), transparent);
+      content: '';
+      pointer-events: none;
+
+      @include bp.respond-to('compact') {
+        top: 0;
+      }
+
+      @include bp.respond-to('medium') {
+        top: 64px;
+      }
+
+      @include bp.respond-to('expanded') {
+        top: 64px;
+      }
+
+      @include bp.respond-to('large') {
+        top: 96px;
+      }
+
+      @include bp.respond-to('extra-large') {
+        top: 110px;
+      }
+    }
+
+    &::after {
+      z-index: 1;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 15px;
+      background: linear-gradient(to top, var(--md-sys-color-surface), transparent);
+      content: '';
+      pointer-events: none;
+
+      @include bp.respond-to('compact') {
+        bottom: 44px;
+      }
+
+      @include bp.respond-to('medium') {
+        bottom: 0;
+      }
+
+      @include bp.respond-to('expanded') {
+        bottom: 0;
+      }
+
+      @include bp.respond-to('large') {
+        bottom: 0;
+      }
+
+      @include bp.respond-to('extra-large') {
+        bottom: 0;
+      }
+    }
+  }
+}
+
+.button-container-compact {
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 80px;
+  left: 0;
+  width: 100%;
+  padding: 10px 16px;
+  background-color: var(--md-sys-color-surface-container);
+
+  .learn-button-compact {
+    width: 100%;
+  }
+}
+
+.load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+  @include tp.title-small;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 24px 0;
+}

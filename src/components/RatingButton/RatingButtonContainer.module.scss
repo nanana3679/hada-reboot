@@ -1,0 +1,28 @@
+@use '@/styles/breakpoints' as bp;
+@use '@/styles/grid-system' as gs;
+
+.rating-button-container {
+  grid-template-columns: repeat(4, 1fr);
+  height: 60px;
+  @include gs.grid-system;
+
+  @include bp.respond-to('medium') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include bp.respond-to('expanded') {
+    height: 80px;
+  }
+
+  @include bp.respond-to('large') {
+    height: 100px;
+  }
+
+  @include bp.respond-to('large') {
+    height: 100px;
+  }
+
+  @include bp.respond-to('extra-large') {
+    height: 100px;
+  }
+}

@@ -1,0 +1,21 @@
+@use '@/styles/typography' as tp;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.korean-word {
+  @include tp.body-large;
+}
+
+.foreign-word {
+  @include tp.body-large;
+}
+
+.homograph-number {
+  @include tp.body-small;
+  color: var(--md-sys-color-on-surface-variant);
+}

@@ -1,0 +1,38 @@
+@use '@/styles/breakpoints' as bp;
+
+@media (max-width: 600px) {
+  .mobile-view {
+    display: block;
+    z-index: 999;
+    position: fixed;
+  }
+  .desktop-view {
+    display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .mobile-view {
+    display: none;
+  }
+  .desktop-view {
+    display: block;
+    z-index: 999;
+    position: fixed;
+  }
+}
+
+.navigation-scrim {
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--md-sys-color-scrim);
+  opacity: 0.16;
+
+  @include bp.respond-to('extra-large') {
+    display: none;
+  }
+}

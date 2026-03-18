@@ -1,0 +1,94 @@
+@use '@/styles/breakpoints' as bp;
+@use '@/styles/typography' as tp;
+
+.learning-card {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  padding: 50px 16px;
+  border-radius: 50px;
+
+  @include bp.respond-to('large') {
+    padding: 68px;
+  }
+
+  @include bp.respond-to('extra-large') {
+    padding: 68px;
+  }
+}
+
+.content-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  height: min-content;
+
+  gap: 24px;
+  color: var(--md-sys-color-on-surface);
+
+  &.detailed {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .revealed {
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .korean-word {
+    @include tp.headline-large;
+  }
+
+  .foreign-word {
+    @include tp.headline-small;
+
+    &.revealed {
+      color: var(--md-sys-color-on-surface-variant);
+    }
+  }
+
+  @include bp.respond-to('medium') {
+    gap: 32px;
+    .korean-word {
+      @include tp.display-medium;
+    }
+    .foreign-word {
+      @include tp.headline-large;
+    }
+  }
+
+  @include bp.respond-to('expanded') {
+    gap: 32px;
+    .korean-word {
+      @include tp.display-medium;
+    }
+    .foreign-word {
+      @include tp.headline-large;
+    }
+  }
+
+  @include bp.respond-to('large') {
+    gap: 24px;
+    .korean-word {
+      @include tp.display-small;
+    }
+    .foreign-word {
+      @include tp.headline-large;
+    }
+  }
+
+  @include bp.respond-to('extra-large') {
+    gap: 32px;
+    .korean-word {
+      @include tp.display-medium;
+    }
+    .foreign-word {
+      @include tp.display-small;
+    }
+  }
+}

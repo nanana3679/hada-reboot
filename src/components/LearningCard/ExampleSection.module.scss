@@ -1,0 +1,42 @@
+@use '@/styles/typography' as tp;
+@use '@/styles/breakpoints' as bp;
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.example-container-icon {
+  color: var(--md-sys-color-on-surface);
+}
+
+.example-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 48px;
+  margin-bottom: 12px;
+  padding: 0 8px;
+  gap: 8px;
+
+  @include tp.title-small;
+
+  @include bp.respond-to('large') {
+    @include tp.title-medium;
+  }
+
+  @include bp.respond-to('extra-large') {
+    @include tp.title-large;
+  }
+}
+
+.example-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+.example-list {
+  gap: 10px;
+}
