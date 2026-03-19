@@ -14,8 +14,8 @@ export const words = sqliteTable('words', {
   frequency: real('frequency'),
   meaningCategory: text('meaning_category'),
   topics: text('topics', { mode: 'json' }).$type<string[]>().notNull().default([]),
-  definition: text('definition').notNull(),
-  examples: text('examples'),
+  definition: text('definition', { mode: 'json' }).$type<string[]>().notNull(),
+  examples: text('examples', { mode: 'json' }).$type<string[]>().notNull().default([]),
   conjugation: text('conjugation'),
   derivative: text('derivative'),
 });
@@ -30,8 +30,8 @@ export const translations = sqliteTable(
       .notNull()
       .references(() => words.id, { onDelete: 'cascade' }),
     langCode: text('lang_code').notNull(),
-    translation: text('translation'),
-    definition: text('definition'),
+    translation: text('translation', { mode: 'json' }).$type<string[]>().notNull().default([]),
+    definition: text('definition', { mode: 'json' }).$type<string[]>().notNull().default([]),
   },
   (table) => [uniqueIndex('translations_word_lang_idx').on(table.wordId, table.langCode)]
 );
