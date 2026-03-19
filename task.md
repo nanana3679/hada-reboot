@@ -4,7 +4,7 @@
 
 - [x] `@cloudflare/next-on-pages` → `@opennextjs/cloudflare` 전환 완료
 - [ ] Next.js API Routes 추가 (`src/app/api/`)
-- [ ] `wrangler.toml`, `env.d.ts` 설정 추가
+- [x] `wrangler.jsonc`, `env.d.ts` 설정 추가
 - [ ] `next.config.mjs` 업데이트
 
 ## refactor: API 클라이언트 구조 변경
