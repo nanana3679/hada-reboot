@@ -5,5 +5,12 @@
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": ".open-next/assets"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hada-db",
+      "database_id": "<YOUR_D1_DATABASE_ID>"
+    }
+  ]
 }
