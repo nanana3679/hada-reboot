@@ -23,10 +23,20 @@
 - [ ] `src/types/schemes.ts` 새 API 응답 타입에 맞게 업데이트
 - [ ] `src/utils/converter.ts` 삭제 (API 응답 형식 통일로 불필요)
 
+## feat: 인증
+
+- [x] RFC-0005: Auth.js v5 + D1 Google OAuth 작성 (accepted)
+- [x] Auth.js v5 + Google OAuth 설정 (`src/auth.ts`, route handler)
+- [ ] D1 auth 테이블 마이그레이션 (users, accounts, sessions, verification_tokens)
+- [ ] AUTH_SECRET, Google OAuth credentials wrangler secret 설정
+- [ ] 로그인/로그아웃 UI 연동
+- [ ] 보호 라우트 설정 (auth middleware 합성)
+
 ## docs: 문서화
 
 - [x] `CLAUDE.md` 추가
 - [x] RFC-0004: D1 + Drizzle 백엔드 재설계 작성
+- [x] RFC-0005: Auth.js v5 + D1 Google OAuth 작성
 - [x] RFC-0001 superseded 처리
 - [x] `.gitignore`에 CSV 제외 추가
 

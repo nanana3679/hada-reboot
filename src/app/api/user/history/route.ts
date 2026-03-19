@@ -1,22 +1,30 @@
 import { NextResponse } from 'next/server';
-import { mockStudyHistories } from '@/mocks/study';
+import { getDb } from '@/db';
+import { userStudyHistory } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+
+// TODO: auth 연동 후 실제 userId로 교체
+const userId = 1;
 
 // GET /api/user/history
 export async function GET() {
-  const content = mockStudyHistories.map((h) => ({
-    deckType: h.deckType,
-    studyType: h.studyType,
-    deckName: h.deckName,
-    studyDate: h.studyDate,
-  }));
+  const db = await getDb();
+
+  const results = await db
+    .select({
+      deckType: userStudyHistory.deckType,
+      studyType: userStudyHistory.studyType,
+      deckName: userStudyHistory.deckName,
+      studyDate: userStudyHistory.studyDate,
+    })
+    .from(userStudyHistory)
+    .where(eq(userStudyHistory.userId, userId))
+    .all();
 
   return NextResponse.json({
-    size: content.length,
+    size: results.length,
     pageSize: 100,
     page: 1,
-    content,
+    content: results,
   });
 }
-
-// GET /api/user/history/latest → 같은 라우트에서 query param으로 처리
-// 별도 라우트가 필요하면 추가 가능
