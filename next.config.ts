@@ -1,18 +1,10 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
-  postcss: {
-    plugins: {
-      'postcss-pxtorem': {
-        rootValue: 16,
-        propList: ['*']
-      },
-      autoprefixer: {}
-    },
-    sassOptions: {
-      quietDeps: true
-    }
-  }
+  reactStrictMode: true,
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
