@@ -9,7 +9,7 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <div className={styles.page}>
       <h1>에러가 발생했습니다</h1>
-      <p>{error.message}</p>
+      <p>{error instanceof Error ? error.message : String(error)}</p>
       <p>error fallback</p>
       <button onClick={resetErrorBoundary}>다시 시도</button>
     </div>
