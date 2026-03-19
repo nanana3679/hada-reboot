@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockWords } from '@/mocks/words';
+import { getDb } from '@/db';
+import { words, translations } from '@/db/schema';
+import { eq, and, sql } from 'drizzle-orm';
+
+function escapeLikePattern(str: string): string {
+  return str.replace(/[%_\\]/g, '\\$&');
+}
+
+function likeEscaped(column: ReturnType<typeof sql>, pattern: string) {
+  return sql`${column} LIKE ${pattern} ESCAPE '\\'`;
+}
 
 // GET /api/words/search?q=hello&lang=en&type=korean|foreign&page=1&pageSize=10
 export async function GET(request: NextRequest) {
@@ -14,29 +24,93 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ size: 0, pageSize, page, content: [] });
   }
 
-  const lowerQuery = query.toLowerCase();
+  const db = await getDb();
+  const offset = (page - 1) * pageSize;
+  const pattern = `%${escapeLikePattern(query)}%`;
 
-  const filtered = type === 'korean'
-    ? mockWords.filter((w) => w.headword.includes(query) || w.definition.includes(query))
-    : mockWords.filter((w) =>
-        w.translations.some(
-          (t) => t.langCode === lang && t.translation.toLowerCase().includes(lowerQuery)
+  if (type === 'korean') {
+    const [countResult, results] = await Promise.all([
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(words)
+        .where(likeEscaped(sql`${words.headword}`, pattern))
+        .get(),
+      db
+        .select({
+          cardId: words.id,
+          koreanWord: words.headword,
+          difficulty: words.level,
+          translation: translations.translation,
+        })
+        .from(words)
+        .leftJoin(
+          translations,
+          and(eq(translations.wordId, words.id), eq(translations.langCode, lang))
         )
-      );
+        .where(likeEscaped(sql`${words.headword}`, pattern))
+        .orderBy(words.id)
+        .limit(pageSize)
+        .offset(offset)
+        .all(),
+    ]);
 
-  const start = (page - 1) * pageSize;
-  const paged = filtered.slice(start, start + pageSize);
-
-  const content = paged.map((w) => {
-    const trans = w.translations.find((t) => t.langCode === lang);
-    return {
-      cardId: w.id,
-      koreanWord: w.headword,
-      difficulty: w.level,
+    const content = results.map((r) => ({
+      cardId: r.cardId,
+      koreanWord: r.koreanWord,
+      difficulty: r.difficulty,
       languageCode: lang,
-      foreignWord: trans?.translation ?? '',
-    };
-  });
+      foreignWord: r.translation?.[0] ?? '',
+    }));
 
-  return NextResponse.json({ size: filtered.length, pageSize, page, content });
+    return NextResponse.json({
+      size: countResult?.count ?? 0,
+      pageSize,
+      page,
+      content,
+    });
+  }
+
+  // 외국어 검색: translation LIKE
+  const foreignWhere = and(
+    eq(translations.langCode, lang),
+    sql`${translations.translation} LIKE ${pattern} ESCAPE '\\'`
+  );
+
+  const [countResult, results] = await Promise.all([
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(translations)
+      .innerJoin(words, eq(translations.wordId, words.id))
+      .where(foreignWhere)
+      .get(),
+    db
+      .select({
+        cardId: words.id,
+        koreanWord: words.headword,
+        difficulty: words.level,
+        translation: translations.translation,
+      })
+      .from(translations)
+      .innerJoin(words, eq(translations.wordId, words.id))
+      .where(foreignWhere)
+      .orderBy(words.id)
+      .limit(pageSize)
+      .offset(offset)
+      .all(),
+  ]);
+
+  const content = results.map((r) => ({
+    cardId: r.cardId,
+    koreanWord: r.koreanWord,
+    difficulty: r.difficulty,
+    languageCode: lang,
+    foreignWord: r.translation?.[0] ?? '',
+  }));
+
+  return NextResponse.json({
+    size: countResult?.count ?? 0,
+    pageSize,
+    page,
+    content,
+  });
 }

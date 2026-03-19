@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockWords } from '@/mocks/words';
-import { mockUserCards } from '@/mocks/study';
+import { getDb } from '@/db';
+import { words, userCards } from '@/db/schema';
+import { eq, and, sql } from 'drizzle-orm';
 
 const STATE_NAMES = ['New', 'Learning', 'Review', 'Relearning'] as const;
 
@@ -14,46 +15,66 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'category is required' }, { status: 400 });
   }
 
-  // 해당 카테고리에 속하는 단어 ID 필터
+  // TODO: auth 연동 후 실제 userId로 교체
+  const userId = 1;
+
+  const db = await getDb();
   const isLevel = ['easy', 'normal', 'hard'].includes(category);
-  const wordsInCategory = isLevel
-    ? mockWords.filter((w) => w.level === category)
-    : mockWords.filter((w) => w.topics.includes(category.toUpperCase()));
-  const wordIds = new Set(wordsInCategory.map((w) => w.id));
 
-  // studyType에 따라 userCard 필터
-  let filtered = mockUserCards.filter((uc) => wordIds.has(uc.wordId));
+  const categoryCondition = isLevel
+    ? eq(words.level, category as 'easy' | 'normal' | 'hard')
+    : sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
 
-  if (studyType === 'new') {
-    filtered = filtered.filter((uc) => uc.state === 0);
-  } else {
-    // review: Learning, Review, Relearning 상태이면서 due가 지난 카드
-    filtered = filtered.filter((uc) => uc.state !== 0 && new Date(uc.due) <= new Date());
-  }
+  const stateCondition =
+    studyType === 'new'
+      ? eq(userCards.state, 0)
+      : and(
+          sql`${userCards.state} != 0`,
+          sql`${userCards.due} <= datetime('now')`
+        );
 
-  const content = filtered.map((uc) => {
-    const word = mockWords.find((w) => w.id === uc.wordId);
-    return {
-      userCardId: uc.id,
-      koreanCard: {
-        cardId: word?.id ?? uc.wordId,
-        koreanWord: word?.headword ?? '',
-        homographNumber: word?.homographNumber ?? 0,
-        level: word?.level ?? 'easy',
-        topics: word?.topics ?? [],
-      },
-      studyInfo: {
-        due: uc.due,
-        stability: uc.stability,
-        difficulty: uc.difficulty,
-        scheduledDays: uc.scheduledDays,
-        reps: uc.reps,
-        lapses: uc.lapses,
-        state: STATE_NAMES[uc.state],
-        lastReview: uc.lastReview,
-      },
-    };
-  });
+  const results = await db
+    .select({
+      userCardId: userCards.id,
+      cardId: words.id,
+      koreanWord: words.headword,
+      homographNumber: words.homographNumber,
+      level: words.level,
+      topics: words.topics,
+      due: userCards.due,
+      stability: userCards.stability,
+      difficulty: userCards.difficulty,
+      scheduledDays: userCards.scheduledDays,
+      reps: userCards.reps,
+      lapses: userCards.lapses,
+      state: userCards.state,
+      lastReview: userCards.lastReview,
+    })
+    .from(userCards)
+    .innerJoin(words, eq(userCards.wordId, words.id))
+    .where(and(eq(userCards.userId, userId), stateCondition, categoryCondition))
+    .all();
+
+  const content = results.map((r) => ({
+    userCardId: r.userCardId,
+    koreanCard: {
+      cardId: r.cardId,
+      koreanWord: r.koreanWord,
+      homographNumber: r.homographNumber,
+      level: r.level,
+      topics: r.topics,
+    },
+    studyInfo: {
+      due: r.due,
+      stability: r.stability,
+      difficulty: r.difficulty,
+      scheduledDays: r.scheduledDays,
+      reps: r.reps,
+      lapses: r.lapses,
+      state: STATE_NAMES[r.state],
+      lastReview: r.lastReview,
+    },
+  }));
 
   return NextResponse.json({
     size: content.length,
