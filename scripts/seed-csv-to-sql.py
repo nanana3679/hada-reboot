@@ -88,10 +88,13 @@ def main():
         topics = [t.strip() for t in topics_raw.split('\n') if t.strip()] if topics_raw else []
 
         freq_str = first['빈도'].strip()
-        frequency = str(float(freq_str)) if freq_str else 'NULL'
+        try:
+            frequency = str(float(freq_str)) if freq_str else 'NULL'
+        except ValueError:
+            frequency = 'NULL'
 
         words_values.append(
-            f"({word_id}, {sql_escape(headword)}, {int(homo_num)}, "
+            f"({word_id}, {sql_escape(headword)}, {int(homo_num) if homo_num.isdigit() else 0}, "
             f"{sql_escape(first['품사'].strip() or None)}, {is_native}, "
             f"{sql_escape(first['원어'].strip() or None)}, "
             f"{sql_escape(first['발음'].strip() or None)}, "
