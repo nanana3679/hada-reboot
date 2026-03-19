@@ -1,0 +1,92 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check previous deploy issues
+        id: check-issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ISSUES=$(gh issue list --label "deploy" --state open --json number,title,createdAt --limit 5)
+          COUNT=$(echo "$ISSUES" | jq length)
+          echo "open_count=${COUNT}" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" -gt "0" ]; then
+            echo "::warning::${COUNT}개의 미해결 배포 이슈가 있습니다"
+            echo "$ISSUES" | jq -r '.[] | "  #\(.number) \(.title) (\(.createdAt))"'
+          fi
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        id: install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        id: build
+        run: pnpm build:cf
+
+      - name: Deploy
+        id: deploy
+        run: pnpm deploy:cf
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Close resolved deploy issues
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue list --label "deploy" --state open --json number --jq '.[].number' | while read -r NUM; do
+            gh issue close "$NUM" \
+              --comment "Resolved by deploy [${GITHUB_SHA::7}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
+          done
+
+      - name: Create issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          FAILED_STEP="unknown"
+          if [ "${{ steps.install.outcome }}" = "failure" ]; then
+            FAILED_STEP="install"
+          elif [ "${{ steps.build.outcome }}" = "failure" ]; then
+            FAILED_STEP="build"
+          elif [ "${{ steps.deploy.outcome }}" = "failure" ]; then
+            FAILED_STEP="deploy"
+          fi
+
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          OPEN_COUNT="${{ steps.check-issues.outputs.open_count }}"
+
+          gh issue create \
+            --title "Deploy failed at ${FAILED_STEP} step — $(date -u +%Y-%m-%d)" \
+            --label "deploy" \
+            --body "## Deploy Failure
+
+          - **Step**: \`${FAILED_STEP}\`
+          - **Commit**: [\`${GITHUB_SHA::7}\`](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})
+          - **Run**: [${GITHUB_RUN_ID}](${RUN_URL})
+          - **Triggered by**: ${GITHUB_ACTOR}
+          - **Open deploy issues**: ${OPEN_COUNT}
+
+          Check the [workflow logs](${RUN_URL}) for details."
