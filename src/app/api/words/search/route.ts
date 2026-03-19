@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/db';
 import { words, translations } from '@/db/schema';
-import { eq, and, like, sql } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 
 function escapeLikePattern(str: string): string {
   return str.replace(/[%_\\]/g, '\\$&');
+}
+
+function likeEscaped(column: ReturnType<typeof sql>, pattern: string) {
+  return sql`${column} LIKE ${pattern} ESCAPE '\\'`;
 }
 
 // GET /api/words/search?q=hello&lang=en&type=korean|foreign&page=1&pageSize=10
@@ -29,7 +33,7 @@ export async function GET(request: NextRequest) {
       db
         .select({ count: sql<number>`count(*)` })
         .from(words)
-        .where(like(words.headword, pattern))
+        .where(likeEscaped(sql`${words.headword}`, pattern))
         .get(),
       db
         .select({
@@ -43,7 +47,7 @@ export async function GET(request: NextRequest) {
           translations,
           and(eq(translations.wordId, words.id), eq(translations.langCode, lang))
         )
-        .where(like(words.headword, pattern))
+        .where(likeEscaped(sql`${words.headword}`, pattern))
         .orderBy(words.id)
         .limit(pageSize)
         .offset(offset)
@@ -69,7 +73,7 @@ export async function GET(request: NextRequest) {
   // 외국어 검색: translation LIKE
   const foreignWhere = and(
     eq(translations.langCode, lang),
-    sql`${translations.translation} LIKE ${pattern}`
+    sql`${translations.translation} LIKE ${pattern} ESCAPE '\\'`
   );
 
   const [countResult, results] = await Promise.all([

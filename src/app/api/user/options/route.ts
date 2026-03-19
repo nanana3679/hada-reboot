@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/db';
 import { userOptions } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 // TODO: auth 연동 후 실제 userId로 교체
 const userId = 1;
@@ -45,35 +45,25 @@ export async function POST(request: NextRequest) {
   const body = (await request.json()) as UserOptionBody;
   const db = await getDb();
 
-  const existing = await db
-    .select()
-    .from(userOptions)
-    .where(eq(userOptions.userId, userId))
-    .get();
-
-  if (existing) {
-    await db
-      .update(userOptions)
-      .set({
-        dailyReviewWords: body.dailyReviewWords ?? existing.dailyReviewWords,
-        dailyStudyWords: body.dailyStudyWords ?? existing.dailyStudyWords,
-        utcOffset: body.utcOffset ?? existing.utcOffset,
-        langCode: body.languageCode ?? existing.langCode,
-      })
-      .where(eq(userOptions.userId, userId))
-      .run();
-  } else {
-    await db
-      .insert(userOptions)
-      .values({
-        userId,
-        dailyReviewWords: body.dailyReviewWords ?? 20,
-        dailyStudyWords: body.dailyStudyWords ?? 10,
-        utcOffset: body.utcOffset ?? 0,
-        langCode: body.languageCode ?? 'en',
-      })
-      .run();
-  }
+  await db
+    .insert(userOptions)
+    .values({
+      userId,
+      dailyReviewWords: body.dailyReviewWords ?? 20,
+      dailyStudyWords: body.dailyStudyWords ?? 10,
+      utcOffset: body.utcOffset ?? 0,
+      langCode: body.languageCode ?? 'en',
+    })
+    .onConflictDoUpdate({
+      target: userOptions.userId,
+      set: {
+        dailyReviewWords: sql`coalesce(${body.dailyReviewWords ?? null}, ${userOptions.dailyReviewWords})`,
+        dailyStudyWords: sql`coalesce(${body.dailyStudyWords ?? null}, ${userOptions.dailyStudyWords})`,
+        utcOffset: sql`coalesce(${body.utcOffset ?? null}, ${userOptions.utcOffset})`,
+        langCode: sql`coalesce(${body.languageCode ?? null}, ${userOptions.langCode})`,
+      },
+    })
+    .run();
 
   const updated = await db
     .select()
