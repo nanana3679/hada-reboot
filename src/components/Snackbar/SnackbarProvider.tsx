@@ -61,24 +61,25 @@ export const SnackbarProvider = ({ children }: { children: React.ReactNode }) =>
   return (
     <SnackbarContext.Provider value={{ showSnackbar }}>
       {children}
-      {createPortal(
-        <AnimatePresence>
-          {visible && (
-            <Snackbar
-              key="snackbar"
-              text={text}
-              actionLabel={actionLabel}
-              onAction={() => {
-                onAction?.();
-                setVisible(false);
-              }}
-              closable={closable}
-              onRequestClose={handleClose}
-            />
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {visible && (
+              <Snackbar
+                key="snackbar"
+                text={text}
+                actionLabel={actionLabel}
+                onAction={() => {
+                  onAction?.();
+                  setVisible(false);
+                }}
+                closable={closable}
+                onRequestClose={handleClose}
+              />
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
     </SnackbarContext.Provider>
   );
 };
