@@ -39,6 +39,10 @@ yarn-error.log*
 # cloudflare
 .open-next/
 
+# data
+*.csv
+*.csv:Zone.Identifier
+
 # oh-my-claudecode
 .omc/
 
