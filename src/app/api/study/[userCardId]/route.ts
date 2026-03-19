@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockUserCards } from '@/mocks/study';
+import { getDb } from '@/db';
+import { userCards } from '@/db/schema';
+import { eq, and } from 'drizzle-orm';
 
 const STATE_NAMES = ['New', 'Learning', 'Review', 'Relearning'] as const;
+const STATE_MAP: Record<string, number> = { New: 0, Learning: 1, Review: 2, Relearning: 3 };
+
+interface StudyInfoBody {
+  due?: string;
+  stability?: number;
+  difficulty?: number;
+  scheduledDays?: number;
+  reps?: number;
+  lapses?: number;
+  state?: string;
+  lastReview?: string;
+}
 
 // POST /api/study/:userCardId — 학습 결과 저장
 export async function POST(
@@ -10,24 +24,52 @@ export async function POST(
 ) {
   const { userCardId } = await params;
   const id = parseInt(userCardId, 10);
-  const body = await request.json();
+  const body = (await request.json()) as StudyInfoBody;
 
-  const card = mockUserCards.find((uc) => uc.id === id);
+  // TODO: auth 연동 후 실제 userId로 교체
+  const userId = 1;
+
+  const db = await getDb();
+
+  const card = await db
+    .select()
+    .from(userCards)
+    .where(and(eq(userCards.id, id), eq(userCards.userId, userId)))
+    .get();
+
   if (!card) {
     return NextResponse.json({ error: 'UserCard not found' }, { status: 404 });
   }
 
-  // Mock: 받은 studyInfo를 그대로 반환 (실제 구현 시 DB 업데이트)
-  const studyInfo = {
-    due: body.due ?? card.due,
-    stability: body.stability ?? card.stability,
-    difficulty: body.difficulty ?? card.difficulty,
-    scheduledDays: body.scheduledDays ?? card.scheduledDays,
-    reps: body.reps ?? card.reps,
-    lapses: body.lapses ?? card.lapses,
-    state: body.state ?? STATE_NAMES[card.state],
-    lastReview: body.lastReview ?? new Date().toISOString(),
-  };
+  const stateValue = typeof body.state === 'string' ? STATE_MAP[body.state] ?? card.state : card.state;
+  const now = new Date().toISOString();
 
-  return NextResponse.json(studyInfo);
+  await db
+    .update(userCards)
+    .set({
+      due: body.due ?? card.due,
+      stability: body.stability ?? card.stability,
+      difficulty: body.difficulty ?? card.difficulty,
+      scheduledDays: body.scheduledDays ?? card.scheduledDays,
+      reps: body.reps ?? card.reps,
+      lapses: body.lapses ?? card.lapses,
+      state: stateValue,
+      lastReview: body.lastReview ?? now,
+      updatedAt: now,
+    })
+    .where(eq(userCards.id, id))
+    .run();
+
+  const updated = await db.select().from(userCards).where(eq(userCards.id, id)).get();
+
+  return NextResponse.json({
+    due: updated!.due,
+    stability: updated!.stability,
+    difficulty: updated!.difficulty,
+    scheduledDays: updated!.scheduledDays,
+    reps: updated!.reps,
+    lapses: updated!.lapses,
+    state: STATE_NAMES[updated!.state],
+    lastReview: updated!.lastReview,
+  });
 }

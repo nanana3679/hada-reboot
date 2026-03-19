@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockWords } from '@/mocks/words';
+import { getDb } from '@/db';
+import { words, translations } from '@/db/schema';
+import { eq, and, sql } from 'drizzle-orm';
 
 // GET /api/decks/cards?category=easy&lang=en&page=1&pageSize=100
 export async function GET(request: NextRequest) {
@@ -13,28 +15,52 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'category is required' }, { status: 400 });
   }
 
-  // level(easy/normal/hard) 또는 topic(CONCEPT/ECONOMY/...)으로 필터
+  const db = await getDb();
+  const offset = (page - 1) * pageSize;
   const isLevel = ['easy', 'normal', 'hard'].includes(category);
-  const filtered = isLevel
-    ? mockWords.filter((w) => w.level === category)
-    : mockWords.filter((w) => w.topics.includes(category.toUpperCase()));
 
-  const start = (page - 1) * pageSize;
-  const paged = filtered.slice(start, start + pageSize);
+  // 카테고리 필터 조건
+  const whereCondition = isLevel
+    ? eq(words.level, category as 'easy' | 'normal' | 'hard')
+    : sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
 
-  const content = paged.map((w) => ({
-    cardId: w.id,
-    koreanWord: w.headword,
-    homographNumber: w.homographNumber,
-    level: w.level,
-    topics: w.topics,
-    foreignWords: w.translations
-      .filter((t) => t.langCode === lang)
-      .map((t) => t.translation),
+  const [countResult, results] = await Promise.all([
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(words)
+      .where(whereCondition)
+      .get(),
+    db
+      .select({
+        cardId: words.id,
+        koreanWord: words.headword,
+        homographNumber: words.homographNumber,
+        level: words.level,
+        topics: words.topics,
+        translation: translations.translation,
+      })
+      .from(words)
+      .leftJoin(
+        translations,
+        and(eq(translations.wordId, words.id), eq(translations.langCode, lang))
+      )
+      .where(whereCondition)
+      .limit(pageSize)
+      .offset(offset)
+      .all(),
+  ]);
+
+  const content = results.map((r) => ({
+    cardId: r.cardId,
+    koreanWord: r.koreanWord,
+    homographNumber: r.homographNumber,
+    level: r.level,
+    topics: r.topics,
+    foreignWords: r.translation ?? [],
   }));
 
   return NextResponse.json({
-    size: filtered.length,
+    size: countResult?.count ?? 0,
     pageSize,
     page,
     content,

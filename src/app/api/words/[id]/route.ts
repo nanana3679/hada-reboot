@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockWords } from '@/mocks/words';
+import { getDb } from '@/db';
+import { words, translations } from '@/db/schema';
+import { eq, and } from 'drizzle-orm';
 
 // GET /api/words/:id?lang=en
 export async function GET(
@@ -10,32 +12,31 @@ export async function GET(
   const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
   const wordId = parseInt(id, 10);
 
-  const word = mockWords.find((w) => w.id === wordId);
+  const db = await getDb();
+
+  const word = await db.select().from(words).where(eq(words.id, wordId)).get();
   if (!word) {
     return NextResponse.json({ error: 'Word not found' }, { status: 404 });
   }
 
-  const meanings = word.translations.map((t) => ({
-    foreignMeaning: t.definition,
-    partsOfSpeech: word.partOfSpeech,
-    pronunciation: word.pronunciation ?? '',
-    languageCode: t.langCode,
-    originalLanguage: word.origin ?? '',
-    foreignWord: t.translation,
-    relatedWords: '',
-    inflection: '',
-    exampleUsage: word.examples ?? '',
-  }));
+  // 해당 언어 번역
+  const trans = await db
+    .select()
+    .from(translations)
+    .where(and(eq(translations.wordId, wordId), eq(translations.langCode, lang)))
+    .get();
 
-  // 같은 표제어의 다른 동형어 조회
-  const homographs = mockWords
-    .filter((w) => w.headword === word.headword && w.id !== word.id)
-    .map((w) => ({
-      cardId: w.id,
-      homographNumber: w.homographNumber,
-      partOfSpeech: w.partOfSpeech,
-      definition: w.definition,
-    }));
+  // 같은 표제어의 다른 동형어
+  const homographs = await db
+    .select({
+      cardId: words.id,
+      homographNumber: words.homographNumber,
+      partOfSpeech: words.partOfSpeech,
+      definition: words.definition,
+    })
+    .from(words)
+    .where(eq(words.headword, word.headword))
+    .all();
 
   return NextResponse.json({
     cardId: word.id,
@@ -44,7 +45,26 @@ export async function GET(
     level: word.level,
     topics: word.topics,
     definition: word.definition,
-    meanings,
-    homographs,
+    meanings: trans
+      ? {
+          foreignMeaning: trans.definition,
+          partsOfSpeech: word.partOfSpeech,
+          pronunciation: word.pronunciation ?? '',
+          languageCode: trans.langCode,
+          originalLanguage: word.origin ?? '',
+          foreignWord: trans.translation,
+          relatedWords: '',
+          inflection: word.conjugation ?? '',
+          exampleUsage: word.examples,
+        }
+      : null,
+    homographs: homographs
+      .filter((h) => h.cardId !== word.id)
+      .map((h) => ({
+        cardId: h.cardId,
+        homographNumber: h.homographNumber,
+        partOfSpeech: h.partOfSpeech,
+        definition: h.definition,
+      })),
   });
 }
