@@ -68,6 +68,6 @@ src/
 
 ## 배포 계획
 
-1. `@cloudflare/next-on-pages` 연동
+1. `@opennextjs/cloudflare` 연동
 2. Cloudflare Pages 배포 파이프라인 구성
 3. 백엔드 API를 Cloudflare Workers 또는 외부 서비스로 대체

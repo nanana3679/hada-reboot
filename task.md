@@ -2,7 +2,7 @@
 
 ## refactor: Cloudflare Workers 백엔드 전환
 
-- [ ] `@cloudflare/next-on-pages` → `@opennextjs/cloudflare` import 변경 (`src/lib/auth.ts`, `src/lib/db.ts`)
+- [x] `@cloudflare/next-on-pages` → `@opennextjs/cloudflare` 전환 완료
 - [ ] Next.js API Routes 추가 (`src/app/api/`)
 - [ ] `wrangler.toml`, `env.d.ts` 설정 추가
 - [ ] `next.config.mjs` 업데이트
