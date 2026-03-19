@@ -81,10 +81,14 @@ export async function POST(request: NextRequest) {
     .where(eq(userOptions.userId, userId))
     .get();
 
+  if (!updated) {
+    return NextResponse.json({ error: 'Failed to retrieve updated options' }, { status: 500 });
+  }
+
   return NextResponse.json({
-    dailyReviewWords: updated!.dailyReviewWords,
-    dailyStudyWords: updated!.dailyStudyWords,
-    utcOffset: updated!.utcOffset,
-    languageCode: updated!.langCode,
+    dailyReviewWords: updated.dailyReviewWords,
+    dailyStudyWords: updated.dailyStudyWords,
+    utcOffset: updated.utcOffset,
+    languageCode: updated.langCode,
   });
 }

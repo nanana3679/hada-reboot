@@ -24,17 +24,21 @@ export async function POST(
 ) {
   const { userCardId } = await params;
   const id = parseInt(userCardId, 10);
+  if (Number.isNaN(id)) {
+    return NextResponse.json({ error: 'Invalid userCardId' }, { status: 400 });
+  }
   const body = (await request.json()) as StudyInfoBody;
 
   // TODO: auth 연동 후 실제 userId로 교체
   const userId = 1;
 
   const db = await getDb();
+  const ownerCondition = and(eq(userCards.id, id), eq(userCards.userId, userId));
 
   const card = await db
     .select()
     .from(userCards)
-    .where(and(eq(userCards.id, id), eq(userCards.userId, userId)))
+    .where(ownerCondition)
     .get();
 
   if (!card) {
@@ -57,19 +61,22 @@ export async function POST(
       lastReview: body.lastReview ?? now,
       updatedAt: now,
     })
-    .where(eq(userCards.id, id))
+    .where(ownerCondition)
     .run();
 
-  const updated = await db.select().from(userCards).where(eq(userCards.id, id)).get();
+  const updated = await db.select().from(userCards).where(ownerCondition).get();
+  if (!updated) {
+    return NextResponse.json({ error: 'Failed to retrieve updated card' }, { status: 500 });
+  }
 
   return NextResponse.json({
-    due: updated!.due,
-    stability: updated!.stability,
-    difficulty: updated!.difficulty,
-    scheduledDays: updated!.scheduledDays,
-    reps: updated!.reps,
-    lapses: updated!.lapses,
-    state: STATE_NAMES[updated!.state],
-    lastReview: updated!.lastReview,
+    due: updated.due,
+    stability: updated.stability,
+    difficulty: updated.difficulty,
+    scheduledDays: updated.scheduledDays,
+    reps: updated.reps,
+    lapses: updated.lapses,
+    state: STATE_NAMES[updated.state],
+    lastReview: updated.lastReview,
   });
 }

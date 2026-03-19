@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
         and(eq(translations.wordId, words.id), eq(translations.langCode, lang))
       )
       .where(whereCondition)
+      .orderBy(words.id)
       .limit(pageSize)
       .offset(offset)
       .all(),
