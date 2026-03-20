@@ -28,7 +28,7 @@ LANG_COLUMNS = {
     'ar': ('아랍어 대역어', '아랍어 대역어 뜻풀이'),
 }
 
-BATCH_SIZE = 500
+BATCH_SIZE = 50
 
 
 def sql_escape(s):

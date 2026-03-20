@@ -7,8 +7,8 @@
 - [x] Drizzle ORM 스키마 정의 (`src/db/schema.ts`)
 - [x] Mock 데이터 작성 (`src/mocks/`)
 - [x] D1 바인딩 설정 (`wrangler.jsonc`, `env.d.ts`)
-- [ ] CSV → D1 시딩 스크립트 작성
-- [ ] Mock API → D1 실제 쿼리로 전환
+- [x] CSV → D1 시딩 스크립트 작성
+- [x] Mock API → D1 실제 쿼리로 전환
 - [ ] KV 캐싱 구현 (덱 집계)
 - [ ] level → topics 통합 반영 (스키마, mock, API)
 
