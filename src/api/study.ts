@@ -8,12 +8,16 @@ import { words, userCards } from '@/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 
 const STATE_NAMES = ['New', 'Learning', 'Review', 'Relearning'] as const;
-const STATE_MAP: Record<string, number> = { New: 0, Learning: 1, Review: 2, Relearning: 3 };
+
+// TODO: auth 연동 후 실제 userId로 교체
+const getUserId = (): number | null => null;
 
 export const getLearningCards = async (studyType: StudyType, category: Category) => {
+  const userId = getUserId();
+  if (!userId) {
+    return { size: 0, pageSize: 100, page: 1, content: [] };
+  }
   const db = await getDb();
-  // TODO: auth 연동 후 실제 userId로 교체
-  const userId = 1;
 
   const categoryCondition = sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
 
@@ -61,7 +65,7 @@ export const getLearningCards = async (studyType: StudyType, category: Category)
       scheduledDays: r.scheduledDays,
       reps: r.reps,
       lapses: r.lapses,
-      state: STATE_NAMES[r.state] as StudyInfoDTO['state'],
+      state: (STATE_NAMES[r.state] ?? 'New') as StudyInfoDTO['state'],
       lastReview: r.lastReview,
     },
   }));
@@ -71,9 +75,11 @@ export const getLearningCards = async (studyType: StudyType, category: Category)
 };
 
 export const postStudyInfo = async (userCardId: number, studyInfo: StudyInfo) => {
+  const userId = getUserId();
+  if (!userId) {
+    throw new Error('Not authenticated');
+  }
   const db = await getDb();
-  // TODO: auth 연동 후 실제 userId로 교체
-  const userId = 1;
 
   const ownerCondition = and(eq(userCards.id, userCardId), eq(userCards.userId, userId));
 
@@ -82,8 +88,9 @@ export const postStudyInfo = async (userCardId: number, studyInfo: StudyInfo) =>
     throw new Error('UserCard not found');
   }
 
-  const stateString = STATE_NAMES[studyInfo.state] ?? 'New';
-  const stateValue = typeof stateString === 'string' ? STATE_MAP[stateString] ?? card.state : card.state;
+  const stateValue = (studyInfo.state >= 0 && studyInfo.state < STATE_NAMES.length)
+    ? studyInfo.state
+    : card.state;
   const now = new Date().toISOString();
 
   await db
@@ -114,7 +121,7 @@ export const postStudyInfo = async (userCardId: number, studyInfo: StudyInfo) =>
     scheduledDays: updated.scheduledDays,
     reps: updated.reps,
     lapses: updated.lapses,
-    state: STATE_NAMES[updated.state],
+    state: STATE_NAMES[updated.state] ?? 'New',
     lastReview: updated.lastReview,
   };
 

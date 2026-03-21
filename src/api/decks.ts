@@ -113,8 +113,11 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
 
 export const getUserStudyHistories = async (): Promise<Paginated<UserStudyHistory>> => {
   const db = await getDb();
-  // TODO: auth 연동 후 실제 userId로 교체
-  const userId = 1;
+  const userId = getUserId();
+
+  if (!userId) {
+    return { size: 0, pageSize: 100, page: 1, content: [] };
+  }
 
   const results = await db
     .select({
