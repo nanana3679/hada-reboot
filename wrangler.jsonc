@@ -6,6 +6,12 @@
   "assets": {
     "directory": ".open-next/assets"
   },
+  "kv_namespaces": [
+    {
+      "binding": "DECK_CACHE",
+      "id": "17d24e2c1ccf455aa08adbe0e5ef11de"
+    }
+  ],
   "d1_databases": [
     {
       "binding": "DB",
