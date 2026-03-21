@@ -21,3 +21,9 @@
 - Runtime: Next.js 16.1.x + @opennextjs/cloudflare
 - Deploy: Cloudflare Workers (GitHub Actions)
 - Package Manager: pnpm 10
+
+## Prerequisites
+
+- Ubuntu 22.04+ (GLIBC 2.35 필요 — workerd/Cloudflare 로컬 개발)
+- Node.js 20+
+- pnpm 10

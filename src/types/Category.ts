@@ -1,72 +1,91 @@
-export type CategoryType = 'difficulty' | 'meaning';
+export type Category =
+  // difficulty
+  | 'easy'
+  | 'normal'
+  | 'hard'
+  // topics
+  | 'family_events'
+  | 'family_events_holidays'
+  | 'expressing_gratitude'
+  | 'expressing_emotions_and_feelings'
+  | 'exchanging_personal_information'
+  | 'health'
+  | 'architecture'
+  | 'economics_and_management'
+  | 'using_public_institutions_library'
+  | 'using_public_institutions_post_office'
+  | 'using_public_institutions_immigration_office'
+  | 'using_public_institutions'
+  | 'performances_and_appreciation'
+  | 'science_and_technology'
+  | 'education'
+  | 'using_transportation'
+  | 'climate'
+  | 'finding_directions'
+  | 'weather_and_seasons'
+  | 'expressing_dates'
+  | 'mass_media'
+  | 'popular_culture'
+  | 'problem_solving_loss_and_breakdown'
+  | 'comparing_cultures'
+  | 'cultural_differences'
+  | 'shopping'
+  | 'law'
+  | 'using_the_hospital'
+  | 'health_and_medicine'
+  | 'describing_attire'
+  | 'describing_incidents_accidents_and_disasters'
+  | 'apologizing'
+  | 'social_issues'
+  | 'social_systems'
+  | 'describing_personality'
+  | 'introducing_family'
+  | 'self_introduction'
+  | 'sports'
+  | 'expressing_time'
+  | 'food_culture'
+  | 'talking_about_mistakes'
+  | 'psychology'
+  | 'using_the_pharmacy'
+  | 'making_appointments'
+  | 'press_and_journalism'
+  | 'language'
+  | 'leisure_activities'
+  | 'travel'
+  | 'history'
+  | 'romance_and_marriage'
+  | 'watching_movies'
+  | 'art'
+  | 'describing_appearance'
+  | 'physical_appearance'
+  | 'describing_cooking'
+  | 'expressing_days_of_the_week'
+  | 'expressing_location'
+  | 'describing_food'
+  | 'ordering_food'
+  | 'human_relationships'
+  | 'greetings'
+  | 'making_phone_calls'
+  | 'politics'
+  | 'religion'
+  | 'residential_life'
+  | 'weekends_and_vacations'
+  | 'geographical_information'
+  | 'jobs_and_career'
+  | 'workplace_life'
+  | 'finding_a_home'
+  | 'household_chores'
+  | 'philosophy_and_ethics'
+  | 'invitations_and_visits'
+  | 'hobbies'
+  | 'computers_and_internet'
+  | 'daily_life'
+  | 'school_life'
+  | 'life_in_korea'
+  | 'korean_literature'
+  | 'environmental_issues';
 
-export type Difficulty = 'easy' | 'normal' | 'hard';
+export const DIFFICULTIES: Category[] = ['easy', 'normal', 'hard'];
 
-export const difficultiesInDisplayOrder: Difficulty[] = ['easy', 'normal', 'hard'];
-
-export type Meaning =
-  | 'CONCEPT'
-  | 'ECONOMY'
-  | 'SCIENCE'
-  | 'TRANSPORT'
-  | 'WEATHER'
-  | 'NEWS'
-  | 'FEELING'
-  | 'GRAMMAR_AND_LANGUAGE'
-  | 'CULTURE'
-  | 'HOSPITAL'
-  | 'LIFE'
-  | 'LIVING'
-  | 'PERSONALITY'
-  | 'NUMBER'
-  | 'COMMUNICATION'
-  | 'TIME'
-  | 'FOOD'
-  | 'RELATIONSHIPS'
-  | 'NATURE'
-  | 'POLITICS'
-  | 'RELIGION'
-  | 'WORK'
-  | 'HOME'
-  | 'FASHION_AND_APPEARANCE'
-  | 'SCHOOL'
-  | 'ACTION'
-  | 'ADMINISTRATION';
-
-export type Category = Meaning | Difficulty;
-
-export const meaningInDisplayOrder: Meaning[] = [
-  'CONCEPT',
-  'ECONOMY',
-  'SCIENCE',
-  'TRANSPORT',
-  'WEATHER',
-  'NEWS',
-  'FEELING',
-  'GRAMMAR_AND_LANGUAGE',
-  'CULTURE',
-  'HOSPITAL',
-  'LIFE',
-  'LIVING',
-  'PERSONALITY',
-  'NUMBER',
-  'COMMUNICATION',
-  'TIME',
-  'FOOD',
-  'RELATIONSHIPS',
-  'NATURE',
-  'POLITICS',
-  'RELIGION',
-  'WORK',
-  'HOME',
-  'FASHION_AND_APPEARANCE',
-  'SCHOOL',
-  'ACTION',
-  'ADMINISTRATION'
-];
-
-export const getCategoryType = (query: CategoryType | string): string | null => {
-  if (difficultiesInDisplayOrder.includes(query as Difficulty)) return 'LEVEL';
-  if (meaningInDisplayOrder.includes(query.toUpperCase() as Meaning)) return 'TOPIC';
-  return null;
-};
+export const isDifficulty = (category: string): boolean =>
+  DIFFICULTIES.includes(category as Category);

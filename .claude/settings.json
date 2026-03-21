@@ -11,6 +11,17 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys,json;d=json.load(sys.stdin);cmd=d.get('tool_input',{}).get('command','');print(json.dumps({'hookSpecificOutput':{'hookEventName':'PostToolUse','additionalContext':'PR이 머지되었습니다. obsidian-sync 스킬을 사용하여 이번 PR의 작업 내용과 만났던 이슈/해결 과정을 ~/obsidian-vault/learnings/에 기록해주세요.'}})) if 'gh pr merge' in cmd else None\""
+          }
+        ]
+      }
+    ],
     "SubagentStop": [
       {
         "matcher": "",

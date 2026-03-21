@@ -12,9 +12,8 @@ export async function GET() {
 
   const results = await db
     .select({
-      deckType: userStudyHistory.deckType,
       studyType: userStudyHistory.studyType,
-      deckName: userStudyHistory.deckName,
+      category: userStudyHistory.category,
       studyDate: userStudyHistory.studyDate,
     })
     .from(userStudyHistory)

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/db';
 import { words, translations } from '@/db/schema';
-import { eq, and, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 // GET /api/decks/cards?category=easy&lang=en&page=1&pageSize=100
 export async function GET(request: NextRequest) {
@@ -17,12 +17,8 @@ export async function GET(request: NextRequest) {
 
   const db = await getDb();
   const offset = (page - 1) * pageSize;
-  const isLevel = ['easy', 'normal', 'hard'].includes(category);
 
-  // 카테고리 필터 조건
-  const whereCondition = isLevel
-    ? eq(words.level, category as 'easy' | 'normal' | 'hard')
-    : sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
+  const whereCondition = sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
 
   const [countResult, results] = await Promise.all([
     db
@@ -35,7 +31,6 @@ export async function GET(request: NextRequest) {
         cardId: words.id,
         koreanWord: words.headword,
         homographNumber: words.homographNumber,
-        level: words.level,
         topics: words.topics,
         translation: translations.translation,
       })
@@ -55,7 +50,6 @@ export async function GET(request: NextRequest) {
     cardId: r.cardId,
     koreanWord: r.koreanWord,
     homographNumber: r.homographNumber,
-    level: r.level,
     topics: r.topics,
     foreignWords: r.translation ?? [],
   }));

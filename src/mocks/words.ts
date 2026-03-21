@@ -6,7 +6,6 @@ export interface MockWord {
   isNative: boolean;
   origin: string | null;
   pronunciation: string | null;
-  level: 'easy' | 'normal' | 'hard';
   frequency: number;
   meaningCategory: string | null;
   topics: string[];
@@ -28,7 +27,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: '줄ː다',
-    level: 'easy',
+
     frequency: 131.0,
     meaningCategory: '개념 > 양',
     topics: ['NUMBER'],
@@ -57,7 +56,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'easy',
+
     frequency: 3057.0,
     meaningCategory: null,
     topics: ['TRANSPORT'],
@@ -77,7 +76,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'easy',
+
     frequency: 168.0,
     meaningCategory: '개념 > 양',
     topics: ['CONCEPT'],
@@ -97,7 +96,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'easy',
+
     frequency: 290.0,
     meaningCategory: '자연 > 자연 현상',
     topics: ['NATURE'],
@@ -117,7 +116,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'easy',
+
     frequency: 515.0,
     meaningCategory: null,
     topics: ['HOSPITAL'],
@@ -137,7 +136,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '海外',
     pronunciation: null,
-    level: 'easy',
+
     frequency: 1044.0,
     meaningCategory: null,
     topics: ['NEWS'],
@@ -157,7 +156,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'easy',
+
     frequency: 3197.0,
     meaningCategory: '경제 > 돈',
     topics: ['ECONOMY'],
@@ -177,7 +176,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: '가ː',
-    level: 'hard',
+
     frequency: 37.0,
     meaningCategory: '자연 > 지형',
     topics: ['NATURE'],
@@ -197,7 +196,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '可',
     pronunciation: '가ː',
-    level: 'normal',
+
     frequency: 37.0,
     meaningCategory: null,
     topics: ['CONCEPT'],
@@ -218,7 +217,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: '꿈꾸다',
-    level: 'normal',
+
     frequency: 112.0,
     meaningCategory: null,
     topics: ['CONCEPT'],
@@ -238,7 +237,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'normal',
+
     frequency: 231.0,
     meaningCategory: '경제 > 돈',
     topics: ['ECONOMY'],
@@ -258,7 +257,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'normal',
+
     frequency: 428.0,
     meaningCategory: '개념 > 양',
     topics: ['NUMBER'],
@@ -278,7 +277,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'normal',
+
     frequency: 60.0,
     meaningCategory: null,
     topics: ['ACTION'],
@@ -298,7 +297,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: null,
-    level: 'normal',
+
     frequency: 96.0,
     meaningCategory: '느낌 > 느낌',
     topics: ['FEELING'],
@@ -318,7 +317,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '專門',
     pronunciation: null,
-    level: 'normal',
+
     frequency: 517.0,
     meaningCategory: null,
     topics: ['CONCEPT'],
@@ -338,7 +337,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '負擔',
     pronunciation: null,
-    level: 'normal',
+
     frequency: 365.0,
     meaningCategory: '느낌 > 느낌',
     topics: ['FEELING'],
@@ -359,7 +358,7 @@ export const mockWords: MockWord[] = [
     isNative: true,
     origin: null,
     pronunciation: '가ː',
-    level: 'hard',
+
     frequency: 37.0,
     meaningCategory: '자연 > 지형',
     topics: ['NATURE'],
@@ -379,7 +378,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '好轉',
     pronunciation: null,
-    level: 'hard',
+
     frequency: 32.0,
     meaningCategory: null,
     topics: ['CONCEPT'],
@@ -399,7 +398,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '土臺',
     pronunciation: null,
-    level: 'hard',
+
     frequency: 120.0,
     meaningCategory: null,
     topics: ['CONCEPT'],
@@ -419,7 +418,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '比喩',
     pronunciation: null,
-    level: 'hard',
+
     frequency: 45.0,
     meaningCategory: null,
     topics: ['CONCEPT'],
@@ -439,7 +438,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '締結',
     pronunciation: null,
-    level: 'hard',
+
     frequency: 88.0,
     meaningCategory: null,
     topics: ['NEWS'],
@@ -459,7 +458,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '下落',
     pronunciation: null,
-    level: 'hard',
+
     frequency: 95.0,
     meaningCategory: '경제 > 돈',
     topics: ['ECONOMY'],
@@ -479,7 +478,7 @@ export const mockWords: MockWord[] = [
     isNative: false,
     origin: '抗議',
     pronunciation: null,
-    level: 'hard',
+
     frequency: 75.0,
     meaningCategory: null,
     topics: ['ACTION'],

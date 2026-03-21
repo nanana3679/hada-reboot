@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
         .select({
           cardId: words.id,
           koreanWord: words.headword,
-          difficulty: words.level,
+          topics: words.topics,
           translation: translations.translation,
         })
         .from(words)
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
     const content = results.map((r) => ({
       cardId: r.cardId,
       koreanWord: r.koreanWord,
-      difficulty: r.difficulty,
+      topics: r.topics,
       languageCode: lang,
       foreignWord: r.translation?.[0] ?? '',
     }));
@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
       .select({
         cardId: words.id,
         koreanWord: words.headword,
-        difficulty: words.level,
+        topics: words.topics,
         translation: translations.translation,
       })
       .from(translations)
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
   const content = results.map((r) => ({
     cardId: r.cardId,
     koreanWord: r.koreanWord,
-    difficulty: r.difficulty,
+    topics: r.topics,
     languageCode: lang,
     foreignWord: r.translation?.[0] ?? '',
   }));

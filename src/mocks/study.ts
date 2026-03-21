@@ -24,9 +24,8 @@ export interface MockUserOption {
 
 export interface MockStudyHistory {
   userId: number;
-  deckType: 'level' | 'topic';
   studyType: 'new' | 'review';
-  deckName: string;
+  category: string;
   studyDate: string;
 }
 
@@ -59,7 +58,7 @@ export const mockUserOption: MockUserOption = {
 };
 
 export const mockStudyHistories: MockStudyHistory[] = [
-  { userId: 1, deckType: 'level', studyType: 'new', deckName: 'easy', studyDate: yesterday },
-  { userId: 1, deckType: 'level', studyType: 'review', deckName: 'easy', studyDate: yesterday },
-  { userId: 1, deckType: 'topic', studyType: 'new', deckName: 'ECONOMY', studyDate: twoDaysAgo },
+  { userId: 1, studyType: 'new', category: 'easy', studyDate: yesterday },
+  { userId: 1, studyType: 'review', category: 'easy', studyDate: yesterday },
+  { userId: 1, studyType: 'new', category: 'economics_and_management', studyDate: twoDaysAgo },
 ];

@@ -42,7 +42,6 @@ export async function GET(
     cardId: word.id,
     koreanWord: word.headword,
     homographNumber: word.homographNumber,
-    level: word.level,
     topics: word.topics,
     definition: word.definition,
     meanings: trans

@@ -12,8 +12,6 @@ import json
 import os
 from collections import defaultdict
 
-LEVEL_MAP = {'초급': 'easy', '중급': 'normal', '고급': 'hard'}
-
 LANG_COLUMNS = {
     'en': ('영어 대역어', '영어 대역어 뜻풀이'),
     'ja': ('일본어 대역어', '일본어 대역어 뜻풀이'),
@@ -28,7 +26,7 @@ LANG_COLUMNS = {
     'ar': ('아랍어 대역어', '아랍어 대역어 뜻풀이'),
 }
 
-BATCH_SIZE = 500
+BATCH_SIZE = 50
 
 
 def sql_escape(s):
@@ -81,11 +79,8 @@ def main():
         definitions = [r['뜻풀이'].strip() for r in sense_rows]
         examples = [r['용례'].strip() for r in sense_rows]
 
-        level = LEVEL_MAP.get(first['어휘 등급'].strip(), 'hard')
         is_native = 1 if first['고유어 여부'].strip() == '고유어' else 0
-
-        topics_raw = first['주제 및 상황 범주'].strip()
-        topics = [t.strip() for t in topics_raw.split('\n') if t.strip()] if topics_raw else []
+        categories = first['categories'].strip() if first['categories'].strip() else '[]'
 
         freq_str = first['빈도'].strip()
         try:
@@ -98,9 +93,9 @@ def main():
             f"{sql_escape(first['품사'].strip() or None)}, {is_native}, "
             f"{sql_escape(first['원어'].strip() or None)}, "
             f"{sql_escape(first['발음'].strip() or None)}, "
-            f"'{level}', {frequency}, "
+            f"{frequency}, "
             f"{sql_escape(first['의미 범주'].strip() or None)}, "
-            f"{sql_escape(to_json(topics))}, "
+            f"{sql_escape(categories)}, "
             f"{sql_escape(to_json(definitions))}, "
             f"{sql_escape(to_json(examples))}, "
             f"{sql_escape(first['활용'].strip() or None)}, "
@@ -132,7 +127,7 @@ def main():
         write_batched_inserts(
             f, 'words',
             ['id', 'headword', 'homograph_number', 'part_of_speech', 'is_native',
-             'origin', 'pronunciation', 'level', 'frequency', 'meaning_category',
+             'origin', 'pronunciation', 'frequency', 'meaning_category',
              'topics', 'definition', 'examples', 'conjugation', 'derivative'],
             words_values, BATCH_SIZE,
         )

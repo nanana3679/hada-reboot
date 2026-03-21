@@ -14,7 +14,7 @@ Spring Boot 백엔드 의존을 제거하고, Cloudflare D1(SQLite) + Drizzle OR
 
 ## Context
 
-현재 HADA는 Next.js 프론트엔드가 외부 Spring Boot 서버의 REST API를 호출하는 구조다.
+현재 HADA는 Next.js 프론트엔드가 외부 Spring Boot 서버의 REST API를 호출하는 구조다. (이전 구조의 상세는 [RFC-0007](0007-legacy-spring-boot-jwt-architecture.md) 참조)
 
 - Next.js는 Cloudflare Workers에 배포되어 있지만, Spring Boot 서버는 별도 인프라에서 운영해야 한다
 - 단어 데이터(58,102건)는 CSV 파일로 이미 확보되어 있어 외부 서버에서 제공받을 필요가 없다
