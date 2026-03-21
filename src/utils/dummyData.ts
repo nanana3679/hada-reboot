@@ -129,7 +129,7 @@ export const DUMMY_STUDY_INFO: StudyInfo = {
 export const DUMMY_STUDY_INFO_DTO: StudyInfoDTO = {
   lapses: 0,
   reps: 0,
-  due: new Date(),
+  due: new Date().toISOString(),
   scheduledDays: 0,
   lastReview: '2025-01-01',
   state: 'New',

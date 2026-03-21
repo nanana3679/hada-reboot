@@ -41,6 +41,7 @@ export function toStudyInfo(studyInfo: StudyInfoDTO): StudyInfo {
 export function toStudyInfoDTO(studyInfo: StudyInfo): StudyInfoDTO {
   return {
     ...studyInfo,
+    due: studyInfo.due.toISOString(),
     state: STATE_MAP[studyInfo.state],
     lastReview: studyInfo.lastReview ? studyInfo.lastReview.toISOString() : null
   };

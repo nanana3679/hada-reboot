@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import DeckListPage from '@/components/common/DeckListPage';
 import { getDecks } from '@/api/decks';
-import { Category } from '@/types/Category';
 import { Deck } from '@/types/schemes';
 import CustomDialog from '@/components/Dialogs/CustomDialog';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';

@@ -3,18 +3,131 @@
 import { Locale } from '@/types/Locale';
 import { Paginated, UserStudyHistory, Deck, KoreanCardWithForeignWords } from '@/types/schemes';
 import { Category } from '@/types/Category';
+import { getDb } from '@/db';
+import { words, translations, userStudyHistory } from '@/db/schema';
+import { and, eq, sql } from 'drizzle-orm';
+import { userCards } from '@/db/schema';
 
-export const getDecks = async () => {
-  const res = await fetch('/api/decks');
-  return (await res.json()) as Paginated<Deck>;
+// TODO: auth 연동 후 실제 userId로 교체
+const getUserId = (): number | null => null;
+
+export const getDecks = async (): Promise<Paginated<Deck>> => {
+  const db = await getDb();
+  const userId = getUserId();
+
+  const results = await db
+    .select({
+      category: sql<string>`json_each.value`,
+      cardCounts: sql<number>`count(*)`,
+    })
+    .from(words)
+    .innerJoin(sql`json_each(${words.topics})`, sql`1=1`)
+    .groupBy(sql`json_each.value`)
+    .all();
+
+  let userCardStats: Record<string, { newCounts: number; learningCounts: number; overdueCounts: number; maturityCounts: number }> = {};
+
+  if (userId) {
+    const stats = await db
+      .select({
+        category: sql<string>`json_each.value`,
+        newCounts: sql<number>`sum(case when ${userCards.state} = 0 then 1 else 0 end)`,
+        learningCounts: sql<number>`sum(case when ${userCards.state} in (1, 3) then 1 else 0 end)`,
+        overdueCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} <= datetime('now') then 1 else 0 end)`,
+        maturityCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} > datetime('now') then 1 else 0 end)`,
+      })
+      .from(userCards)
+      .innerJoin(words, eq(userCards.wordId, words.id))
+      .innerJoin(sql`json_each(${words.topics})`, sql`1=1`)
+      .where(eq(userCards.userId, userId))
+      .groupBy(sql`json_each.value`)
+      .all();
+
+    for (const s of stats) {
+      userCardStats[s.category] = {
+        newCounts: s.newCounts ?? 0,
+        learningCounts: s.learningCounts ?? 0,
+        overdueCounts: s.overdueCounts ?? 0,
+        maturityCounts: s.maturityCounts ?? 0,
+      };
+    }
+  }
+
+  const decks = results.map((r) => ({
+    category: r.category,
+    cardCounts: r.cardCounts,
+    ...(userCardStats[r.category] ?? {
+      newCounts: 0,
+      learningCounts: 0,
+      overdueCounts: 0,
+      maturityCounts: 0,
+    }),
+  }));
+
+  return { size: decks.length, pageSize: 100, page: 1, content: decks };
 };
 
-export const getCardsFromDeck = async (locale: Locale, category: Category, page: number) => {
-  const res = await fetch(`/api/decks/cards?category=${category}&lang=${locale}&page=${page}&pageSize=100`);
-  return (await res.json()) as Paginated<KoreanCardWithForeignWords>;
+export const getCardsFromDeck = async (locale: Locale, category: Category, page: number): Promise<Paginated<KoreanCardWithForeignWords>> => {
+  const db = await getDb();
+  const pageSize = 100;
+  const offset = (page - 1) * pageSize;
+
+  const whereCondition = sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
+
+  const [countResult, results] = await Promise.all([
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(words)
+      .where(whereCondition)
+      .get(),
+    db
+      .select({
+        cardId: words.id,
+        koreanWord: words.headword,
+        homographNumber: words.homographNumber,
+        topics: words.topics,
+        translation: translations.translation,
+      })
+      .from(words)
+      .leftJoin(
+        translations,
+        and(eq(translations.wordId, words.id), eq(translations.langCode, locale))
+      )
+      .where(whereCondition)
+      .orderBy(words.id)
+      .limit(pageSize)
+      .offset(offset)
+      .all(),
+  ]);
+
+  const content = results.map((r) => ({
+    cardId: r.cardId,
+    koreanWord: r.koreanWord,
+    homographNumber: r.homographNumber,
+    topics: r.topics,
+    foreignWords: r.translation ?? [],
+  }));
+
+  return { size: countResult?.count ?? 0, pageSize, page, content };
 };
 
-export const getUserStudyHistories = async () => {
-  const res = await fetch('/api/user/history');
-  return (await res.json()) as Paginated<UserStudyHistory>;
+export const getUserStudyHistories = async (): Promise<Paginated<UserStudyHistory>> => {
+  const db = await getDb();
+  const userId = getUserId();
+
+  if (!userId) {
+    return { size: 0, pageSize: 100, page: 1, content: [] };
+  }
+
+  const results = await db
+    .select({
+      studyType: userStudyHistory.studyType,
+      category: userStudyHistory.category,
+      studyDate: userStudyHistory.studyDate,
+    })
+    .from(userStudyHistory)
+    .where(eq(userStudyHistory.userId, userId))
+    .all();
+
+  return { size: results.length, pageSize: 100, page: 1, content: results };
 };

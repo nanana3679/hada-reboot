@@ -11,15 +11,13 @@ import CustomDialog from '@/components/Dialogs/CustomDialog';
 
 import styles from './DeckListPage.module.scss';
 import { Deck } from '@/types/schemes';
-import { Category } from '@/types/Category';
-import { camelize } from 'humps';
 
 export default function DeckListPage({
   decks,
   displayOrder
 }: {
   decks: Deck[];
-  displayOrder: Category[];
+  displayOrder: string[];
 }) {
   const t = useTranslations();
   const locale = useLocale();

@@ -13,7 +13,6 @@ import { getFormatUnit } from '@/utils/unitFormatter';
 import styles from './DeckCard.module.scss';
 import { OutlinedCard } from '@/components/Card/Card';
 import DeckProgressBar from '@/components/ProgressBar/DeckProgressBar';
-import { isDifficulty } from '@/types/Category';
 
 // DeckCard 컴포넌트
 const DeckCard = ({ deck, title, isCompleted, locale, buttonLabels, onLearn }: DeckCardProps) => {
