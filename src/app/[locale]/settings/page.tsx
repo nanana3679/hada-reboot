@@ -26,6 +26,7 @@ import { useErrorBoundary } from 'react-error-boundary';
 import { Theme, useTheme } from '@/context/ThemeContext';
 import CustomDialog from '@/components/Dialogs/CustomDialog';
 import { useSnackbar } from '@/components/Snackbar/SnackbarProvider';
+import { signOutAction } from '@/api/auth-actions';
 
 export default function SettingsPage() {
   const locale = useLocale();
@@ -398,7 +399,9 @@ export default function SettingsPage() {
           <h3 className={styles['group-title']}>{t('settings.account')}</h3>
           {/* Sign out */}
           <div className={styles['sign-out-button']}>
-            <TextButton>{t('settings.signOut')}</TextButton>
+            <form action={signOutAction}>
+              <TextButton type="submit">{t('settings.signOut')}</TextButton>
+            </form>
           </div>
           {/* Delete account */}
           <TextButton>{t('settings.deleteAccount')}</TextButton>
