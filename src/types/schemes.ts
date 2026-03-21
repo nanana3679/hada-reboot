@@ -53,8 +53,9 @@ export type StudyInfo = {
 
 export type StudyInfoDTO = Omit<
   StudyInfo,
-  'lastReview' | 'state' | 'elapsedDays' | 'learningSteps'
+  'due' | 'lastReview' | 'state' | 'elapsedDays' | 'learningSteps'
 > & {
+  due: string;
   lastReview: string | null;
   state: 'New' | 'Learning' | 'Review' | 'Relearning';
 };
@@ -72,7 +73,7 @@ export interface UserCardDTO {
 }
 
 export interface Deck {
-  category: Category;
+  category: string;
   cardCounts: number;
   learningCounts: number;
   newCounts: number;
@@ -82,7 +83,7 @@ export interface Deck {
 
 export interface UserStudyHistory {
   studyType: StudyType;
-  category: Category;
+  category: string;
   studyDate: string;
 }
 
