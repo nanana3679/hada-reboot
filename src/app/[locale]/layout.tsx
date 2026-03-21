@@ -6,15 +6,14 @@ import { StoreProvider } from '@/providers/StoreProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
 import ErrorBoundaryWrapper from '@/providers/ErrorBoundaryWrapper';
 
-import { AuthService } from '@/services/AuthService';
-import { CookieService } from '@/services/CookieService';
+import { getAuth } from '@/auth';
 
 import styles from './layout.module.scss';
 
 const NavigationLayout = async ({ children }: { children: React.ReactNode }) => {
-  const cookieService = new CookieService();
-  const authService = new AuthService(cookieService);
-  const isLoggedIn = await authService.isLoggedIn();
+  const { auth } = await getAuth();
+  const session = await auth();
+  const isLoggedIn = !!session;
 
   return (
     <ErrorBoundaryWrapper>

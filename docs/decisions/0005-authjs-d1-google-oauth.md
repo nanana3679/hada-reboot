@@ -48,15 +48,34 @@ import Google from "next-auth/providers/google";
 import { D1Adapter } from "@auth/d1-adapter";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-const authResult = async () => {
+export async function getAuth() {
   const { env } = await getCloudflareContext({ async: true });
   return NextAuth({
     providers: [Google],
     adapter: D1Adapter(env.DB),
   });
-};
+}
+```
 
-export const { handlers, signIn, signOut, auth } = await authResult();
+**일반적인 Auth.js v5 패턴과 다른 이유:**
+
+일반적으로는 모듈 레벨에서 `export const { auth, signIn, signOut, handlers } = NextAuth(...)` 로 내보낸다. 그러나 Cloudflare 환경에서는 D1 바인딩을 얻기 위해 `getCloudflareContext()`를 호출해야 하고, 이것이 async이므로 모듈 레벨 export가 불가능하다. 대신 `getAuth()` async 함수로 감싸서, 호출 시점에 바인딩을 얻는다.
+
+```ts
+// 사용 예시: Server Component에서 세션 확인
+const { auth } = await getAuth();
+const session = await auth();
+// session?.user?.id 로 userId 접근
+
+// 사용 예시: Server Action에서 userId 가져오기
+const { auth } = await getAuth();
+const session = await auth();
+if (!session?.user?.id) throw new Error('Not authenticated');
+const userId = session.user.id;
+
+// 사용 예시: Route Handler (src/app/api/auth/[...nextauth]/route.ts)
+const { handlers } = await getAuth();
+return handlers.GET(request);
 ```
 
 ### 4. jose v6 override
