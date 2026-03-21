@@ -8,7 +8,7 @@ const USER_TTL = 60 * 60;        // 1h
 
 export const GLOBAL_DECK_KEY = 'decks:global';
 
-export function userDeckKey(userId: number) {
+export function userDeckKey(userId: string) {
   return `decks:user:${userId}`;
 }
 
@@ -42,10 +42,10 @@ export async function setGlobalDeckCache<T>(value: T) {
   return setCached(GLOBAL_DECK_KEY, value, GLOBAL_TTL);
 }
 
-export async function setUserDeckCache<T>(userId: number, value: T) {
+export async function setUserDeckCache<T>(userId: string, value: T) {
   return setCached(userDeckKey(userId), value, USER_TTL);
 }
 
-export async function invalidateUserDeckCache(userId: number) {
+export async function invalidateUserDeckCache(userId: string) {
   await invalidateCache(userDeckKey(userId));
 }

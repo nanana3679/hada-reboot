@@ -14,9 +14,13 @@ import {
   GLOBAL_DECK_KEY,
   userDeckKey,
 } from '@/lib/cache';
+import { getAuth } from '@/auth';
 
-// TODO: auth 연동 후 실제 userId로 교체
-const getUserId = (): number | null => null;
+async function getUserId(): Promise<string | null> {
+  const { auth } = await getAuth();
+  const session = await auth();
+  return session?.user?.id ?? null;
+}
 
 type GlobalDeckStats = Record<string, number>;
 type UserCardStats = Record<string, {
@@ -27,7 +31,7 @@ type UserCardStats = Record<string, {
 }>;
 
 export const getDecks = async (): Promise<Paginated<Deck>> => {
-  const userId = getUserId();
+  const userId = await getUserId();
 
   // 1. 글로벌 캐시 → 미스 시 DB 쿼리
   let globalStats = await getCached<GlobalDeckStats>(GLOBAL_DECK_KEY);
@@ -151,7 +155,7 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
 
 export const getUserStudyHistories = async (): Promise<Paginated<UserStudyHistory>> => {
   const db = await getDb();
-  const userId = getUserId();
+  const userId = await getUserId();
 
   if (!userId) {
     return { size: 0, pageSize: 100, page: 1, content: [] };

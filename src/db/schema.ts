@@ -35,12 +35,46 @@ export const translations = sqliteTable(
   (table) => [uniqueIndex('translations_word_lang_idx').on(table.wordId, table.langCode)]
 );
 
-// ─── 사용자 ───
+// ─── Auth.js 테이블 (실제 생성은 @auth/d1-adapter의 up() 함수가 담당) ───
 
 export const users = sqliteTable('users', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  externalId: text('external_id').notNull().unique(),
-  createdAt: text('created_at').notNull(),
+  id: text('id').notNull().primaryKey(),
+  name: text('name'),
+  email: text('email'),
+  emailVerified: integer('emailVerified', { mode: 'timestamp' }),
+  image: text('image'),
+});
+
+export const accounts = sqliteTable('accounts', {
+  id: text('id').notNull().primaryKey(),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  type: text('type').notNull(),
+  provider: text('provider').notNull(),
+  providerAccountId: text('providerAccountId').notNull(),
+  refreshToken: text('refresh_token'),
+  accessToken: text('access_token'),
+  expiresAt: integer('expires_at'),
+  tokenType: text('token_type'),
+  scope: text('scope'),
+  idToken: text('id_token'),
+  sessionState: text('session_state'),
+});
+
+export const sessions = sqliteTable('sessions', {
+  id: text('id').notNull(),
+  sessionToken: text('sessionToken').notNull().primaryKey(),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  expires: integer('expires', { mode: 'timestamp' }).notNull(),
+});
+
+export const verificationTokens = sqliteTable('verification_tokens', {
+  identifier: text('identifier').notNull(),
+  token: text('token').notNull().primaryKey(),
+  expires: integer('expires', { mode: 'timestamp' }).notNull(),
 });
 
 // ─── 학습 카드 (FSRS 상태) ───
@@ -49,7 +83,7 @@ export const userCards = sqliteTable(
   'user_cards',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
-    userId: integer('user_id')
+    userId: text('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     wordId: integer('word_id')
@@ -73,7 +107,7 @@ export const userCards = sqliteTable(
 
 export const userOptions = sqliteTable('user_options', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: integer('user_id')
+  userId: text('user_id')
     .notNull()
     .unique()
     .references(() => users.id, { onDelete: 'cascade' }),
@@ -87,7 +121,7 @@ export const userOptions = sqliteTable('user_options', {
 
 export const userStudyHistory = sqliteTable('user_study_history', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: integer('user_id')
+  userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   studyType: text('study_type', { enum: ['new', 'review'] }).notNull(),
