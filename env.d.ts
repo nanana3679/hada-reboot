@@ -6,6 +6,7 @@
 declare global {
   interface CloudflareEnv {
     DB: D1Database;
+    DECK_CACHE: KVNamespace;
   }
 }
 

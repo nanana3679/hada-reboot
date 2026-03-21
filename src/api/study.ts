@@ -6,6 +6,7 @@ import { toStudyInfo, toUserCard } from '@/utils/converter';
 import { getDb } from '@/db';
 import { words, userCards } from '@/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
+import { invalidateUserDeckCache } from '@/lib/cache';
 
 const STATE_NAMES = ['New', 'Learning', 'Review', 'Relearning'] as const;
 
@@ -108,6 +109,8 @@ export const postStudyInfo = async (userCardId: number, studyInfo: StudyInfo) =>
     })
     .where(ownerCondition)
     .run();
+
+  await invalidateUserDeckCache(userId);
 
   const updated = await db.select().from(userCards).where(ownerCondition).get();
   if (!updated) {
