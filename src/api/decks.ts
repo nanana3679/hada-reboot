@@ -7,56 +7,94 @@ import { getDb } from '@/db';
 import { words, translations, userStudyHistory } from '@/db/schema';
 import { and, eq, sql } from 'drizzle-orm';
 import { userCards } from '@/db/schema';
+import {
+  getCached,
+  setGlobalDeckCache,
+  setUserDeckCache,
+  GLOBAL_DECK_KEY,
+  userDeckKey,
+} from '@/lib/cache';
 
 // TODO: auth 연동 후 실제 userId로 교체
 const getUserId = (): number | null => null;
 
+type GlobalDeckStats = Record<string, number>;
+type UserCardStats = Record<string, {
+  newCounts: number;
+  learningCounts: number;
+  overdueCounts: number;
+  maturityCounts: number;
+}>;
+
 export const getDecks = async (): Promise<Paginated<Deck>> => {
-  const db = await getDb();
   const userId = getUserId();
 
-  const results = await db
-    .select({
-      category: sql<string>`json_each.value`,
-      cardCounts: sql<number>`count(*)`,
-    })
-    .from(words)
-    .innerJoin(sql`json_each(${words.topics})`, sql`1=1`)
-    .groupBy(sql`json_each.value`)
-    .all();
+  // 1. 글로벌 캐시 → 미스 시 DB 쿼리
+  let globalStats = await getCached<GlobalDeckStats>(GLOBAL_DECK_KEY);
 
-  let userCardStats: Record<string, { newCounts: number; learningCounts: number; overdueCounts: number; maturityCounts: number }> = {};
-
-  if (userId) {
-    const stats = await db
+  if (!globalStats) {
+    const db = await getDb();
+    const results = await db
       .select({
         category: sql<string>`json_each.value`,
-        newCounts: sql<number>`sum(case when ${userCards.state} = 0 then 1 else 0 end)`,
-        learningCounts: sql<number>`sum(case when ${userCards.state} in (1, 3) then 1 else 0 end)`,
-        overdueCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} <= datetime('now') then 1 else 0 end)`,
-        maturityCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} > datetime('now') then 1 else 0 end)`,
+        cardCounts: sql<number>`count(*)`,
       })
-      .from(userCards)
-      .innerJoin(words, eq(userCards.wordId, words.id))
+      .from(words)
       .innerJoin(sql`json_each(${words.topics})`, sql`1=1`)
-      .where(eq(userCards.userId, userId))
       .groupBy(sql`json_each.value`)
       .all();
 
-    for (const s of stats) {
-      userCardStats[s.category] = {
-        newCounts: s.newCounts ?? 0,
-        learningCounts: s.learningCounts ?? 0,
-        overdueCounts: s.overdueCounts ?? 0,
-        maturityCounts: s.maturityCounts ?? 0,
-      };
+    globalStats = {};
+    for (const r of results) {
+      globalStats[r.category] = r.cardCounts;
+    }
+
+    await setGlobalDeckCache(globalStats);
+  }
+
+  // 2. 유저 캐시 → 미스 시 DB 쿼리
+  let userCardStats: UserCardStats = {};
+
+  if (userId) {
+    const cached = await getCached<UserCardStats>(userDeckKey(userId));
+
+    if (cached) {
+      userCardStats = cached;
+    } else {
+      const db = await getDb();
+      const stats = await db
+        .select({
+          category: sql<string>`json_each.value`,
+          newCounts: sql<number>`sum(case when ${userCards.state} = 0 then 1 else 0 end)`,
+          learningCounts: sql<number>`sum(case when ${userCards.state} in (1, 3) then 1 else 0 end)`,
+          overdueCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} <= datetime('now') then 1 else 0 end)`,
+          maturityCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} > datetime('now') then 1 else 0 end)`,
+        })
+        .from(userCards)
+        .innerJoin(words, eq(userCards.wordId, words.id))
+        .innerJoin(sql`json_each(${words.topics})`, sql`1=1`)
+        .where(eq(userCards.userId, userId))
+        .groupBy(sql`json_each.value`)
+        .all();
+
+      for (const s of stats) {
+        userCardStats[s.category] = {
+          newCounts: s.newCounts ?? 0,
+          learningCounts: s.learningCounts ?? 0,
+          overdueCounts: s.overdueCounts ?? 0,
+          maturityCounts: s.maturityCounts ?? 0,
+        };
+      }
+
+      await setUserDeckCache(userId, userCardStats);
     }
   }
 
-  const decks = results.map((r) => ({
-    category: r.category,
-    cardCounts: r.cardCounts,
-    ...(userCardStats[r.category] ?? {
+  // 3. 글로벌 + 유저 합쳐서 응답
+  const decks = Object.entries(globalStats).map(([category, cardCounts]) => ({
+    category,
+    cardCounts: cardCounts as number,
+    ...(userCardStats[category] ?? {
       newCounts: 0,
       learningCounts: 0,
       overdueCounts: 0,
