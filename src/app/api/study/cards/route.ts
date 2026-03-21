@@ -19,11 +19,7 @@ export async function GET(request: NextRequest) {
   const userId = 1;
 
   const db = await getDb();
-  const isLevel = ['easy', 'normal', 'hard'].includes(category);
-
-  const categoryCondition = isLevel
-    ? eq(words.level, category as 'easy' | 'normal' | 'hard')
-    : sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
+  const categoryCondition = sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
 
   const stateCondition =
     studyType === 'new'
@@ -39,7 +35,6 @@ export async function GET(request: NextRequest) {
       cardId: words.id,
       koreanWord: words.headword,
       homographNumber: words.homographNumber,
-      level: words.level,
       topics: words.topics,
       due: userCards.due,
       stability: userCards.stability,
@@ -61,7 +56,6 @@ export async function GET(request: NextRequest) {
       cardId: r.cardId,
       koreanWord: r.koreanWord,
       homographNumber: r.homographNumber,
-      level: r.level,
       topics: r.topics,
     },
     studyInfo: {

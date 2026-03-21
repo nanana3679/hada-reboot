@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import DeckListPage from '@/components/common/DeckListPage';
 import { getDecks } from '@/api/decks';
-import { CategoryType, difficultiesInDisplayOrder } from '@/types/Category';
+import { Category } from '@/types/Category';
 import { Deck } from '@/types/schemes';
 import CustomDialog from '@/components/Dialogs/CustomDialog';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
@@ -14,13 +14,12 @@ import { useParams } from 'next/navigation';
 export default function CategoryTypeClientPage({ isLoggedIn }: { isLoggedIn: boolean }) {
   const t = useTranslations();
   const params = useParams();
-  const categoryType = params?.categoryType as CategoryType;
   const [decks, setDecks] = useState<Deck[]>();
   const [isCookieConsentOpen, setIsCookieConsentOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserCards = async () => {
-      const fetchedDecks = await getDecks(categoryType);
+      const fetchedDecks = await getDecks();
       if (fetchedDecks) {
         setDecks(fetchedDecks.content);
       }
@@ -31,7 +30,7 @@ export default function CategoryTypeClientPage({ isLoggedIn }: { isLoggedIn: boo
     if (!cookieConsent && isLoggedIn) {
       setIsCookieConsentOpen(true);
     }
-  }, [isLoggedIn, categoryType]);
+  }, [isLoggedIn]);
 
   const handleCookieConsent = () => {
     localStorage.setItem('cookieConsent', 'true');
@@ -46,8 +45,7 @@ export default function CategoryTypeClientPage({ isLoggedIn }: { isLoggedIn: boo
     <>
       <DeckListPage
         decks={decks}
-        categoryType={categoryType}
-        displayOrder={difficultiesInDisplayOrder}
+        displayOrder={decks.map((d) => d.category)}
       />
       <CustomDialog
         open={isCookieConsentOpen}

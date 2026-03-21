@@ -2,7 +2,6 @@ import { dateDiffInDays } from 'ts-fsrs';
 
 import { KoreanCardDetail, StudyInfo, StudyInfoDTO, UserCard, UserCardDTO } from '@/types/schemes';
 import { DUMMY_KOR_CARD_DETAIL } from './dummyData';
-import { getCategoryType } from '@/types/Category';
 import { STATE_MAP, STATE_MAP_REVERSE } from '@/constants/study';
 
 // 서버에서 받은 데이터를 클라이언트에서 사용할 수 있는 형식으로 변환
@@ -55,19 +54,3 @@ export function toKoreanCardDetail(card: UserCardDTO): KoreanCardDetail {
   };
 }
 
-// 서버에서 사용하는 명칭으로 변경
-export function normalizeQuery(query: string) {
-  switch (query) {
-    case 'difficulty':
-      return 'LEVEL';
-    case 'meaning':
-      return 'TOPIC';
-    case 'new':
-      return 'study';
-    default:
-      if (getCategoryType(query) === 'meaning') {
-        return query.toUpperCase();
-      }
-      return query;
-  }
-}

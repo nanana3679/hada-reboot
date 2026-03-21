@@ -11,7 +11,7 @@ import LearningProgressBar from '@/components/ProgressBar/LearningProgressBar';
 import CustomDialog from '@/components/Dialogs/CustomDialog';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
-import { Category, getCategoryType } from '@/types/Category';
+import { Category } from '@/types/Category';
 import { MenuItem } from '@/types/Menu';
 import { Rating } from 'ts-fsrs';
 
@@ -174,7 +174,7 @@ export default function LearningPage() {
             alert('Not implemented');
           }}
           secondButtonOnclick={() => {
-            redirect(`/${getCategoryType(category as Category)}`);
+            redirect(`/decks`);
           }}
         />
       )}

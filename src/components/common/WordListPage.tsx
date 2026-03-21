@@ -12,8 +12,7 @@ import WordListItemDesktop from '@/components/WordListItem/WordListItemDesktop';
 import WordListItemMobile from '@/components/WordListItem/WordListItemMobile';
 import { KoreanCardWithForeignWords } from '@/types/schemes';
 import styles from './WordListPage.module.scss';
-import { getCategoryType } from '@/types/Category';
-import { camelize } from 'humps';
+import { isDifficulty } from '@/types/Category';
 import { SpinnerCircular } from 'spinners-react';
 
 export default function WordListPage({
@@ -42,10 +41,7 @@ export default function WordListPage({
 
   const WordListItem = !isLarge ? WordListItemMobile : WordListItemDesktop;
 
-  const title =
-    getCategoryType(category) === 'LEVEL'
-      ? `difficulty.${category}`
-      : `meaning.${camelize(category)}`;
+  const title = `category.${category}`;
 
   const onLearnClick = () => {
     router.push(`/learning/${category}`);

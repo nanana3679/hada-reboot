@@ -10,7 +10,6 @@ export const words = sqliteTable('words', {
   isNative: integer('is_native', { mode: 'boolean' }),
   origin: text('origin'),
   pronunciation: text('pronunciation'),
-  level: text('level', { enum: ['easy', 'normal', 'hard'] }).notNull(),
   frequency: real('frequency'),
   meaningCategory: text('meaning_category'),
   topics: text('topics', { mode: 'json' }).$type<string[]>().notNull().default([]),
@@ -91,8 +90,7 @@ export const userStudyHistory = sqliteTable('user_study_history', {
   userId: integer('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  deckType: text('deck_type', { enum: ['level', 'topic'] }).notNull(),
   studyType: text('study_type', { enum: ['new', 'review'] }).notNull(),
-  deckName: text('deck_name').notNull(),
+  category: text('category').notNull(),
   studyDate: text('study_date').notNull(),
 });

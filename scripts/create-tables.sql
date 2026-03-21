@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS words (
   is_native INTEGER,
   origin TEXT,
   pronunciation TEXT,
-  level TEXT NOT NULL CHECK(level IN ('easy', 'normal', 'hard')),
   frequency REAL,
   meaning_category TEXT,
   topics TEXT NOT NULL DEFAULT '[]',
@@ -61,8 +60,7 @@ CREATE TABLE IF NOT EXISTS user_options (
 CREATE TABLE IF NOT EXISTS user_study_history (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  deck_type TEXT NOT NULL CHECK(deck_type IN ('level', 'topic')),
   study_type TEXT NOT NULL CHECK(study_type IN ('new', 'review')),
-  deck_name TEXT NOT NULL,
+  category TEXT NOT NULL,
   study_date TEXT NOT NULL
 );

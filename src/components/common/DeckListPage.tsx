@@ -11,16 +11,14 @@ import CustomDialog from '@/components/Dialogs/CustomDialog';
 
 import styles from './DeckListPage.module.scss';
 import { Deck } from '@/types/schemes';
-import { Category, CategoryType } from '@/types/Category';
+import { Category } from '@/types/Category';
 import { camelize } from 'humps';
 
 export default function DeckListPage({
   decks,
-  categoryType,
   displayOrder
 }: {
   decks: Deck[];
-  categoryType: CategoryType;
   displayOrder: Category[];
 }) {
   const t = useTranslations();
@@ -43,7 +41,7 @@ export default function DeckListPage({
   const handleLearn = (isCompleted: boolean) => setIsDialogOpen(isCompleted);
 
   const handleViewWords = (deck: Deck) => {
-    router.push(`/${locale}/${categoryType}/${deck.category}`);
+    router.push(`/${locale}/decks/${deck.category}`);
   };
 
   const DeckCard = isCompact ? DeckCardCompact : DeckCardDesktop;
@@ -54,10 +52,7 @@ export default function DeckListPage({
     );
   }, [decks, displayOrder]);
 
-  const getTitle =
-    categoryType === 'difficulty'
-      ? (category: string) => `difficulty.${category}`
-      : (category: string) => `meaning.${camelize(category.toLowerCase())}`;
+  const getTitle = (category: string) => `category.${category}`;
 
   return (
     <>
@@ -65,9 +60,7 @@ export default function DeckListPage({
         <div className={styles['content']}>
           {!isCompact && (
             <h1 className={styles.title}>
-              {t(
-                `${categoryType}.wordsBy${categoryType.charAt(0).toUpperCase() + categoryType.slice(1)}`
-              )}
+              {t('decks.title')}
             </h1>
           )}
           <div className={styles.cards}>

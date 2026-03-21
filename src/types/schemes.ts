@@ -1,4 +1,4 @@
-import { Difficulty, Category } from './Category';
+import { Category } from './Category';
 import { Locale } from './Locale';
 import { SnakeToCamelCase } from './typeTransform';
 import { Card as FSRSCard } from 'ts-fsrs';
@@ -13,7 +13,7 @@ export type Paginated<T> = {
 };
 
 export interface Card {
-  difficulty: Difficulty;
+  topics: string[];
   cardId: number;
   koreanWord: string;
   languageCode: Locale;
@@ -22,7 +22,6 @@ export interface Card {
 
 export interface KoreanCard {
   homographNumber: number;
-  level: Difficulty;
   topics: string[];
   cardId: number;
   koreanWord: string;
@@ -82,9 +81,8 @@ export interface Deck {
 }
 
 export interface UserStudyHistory {
-  deckType: 'level' | 'meaning';
   studyType: StudyType;
-  deckName: Category;
+  category: Category;
   studyDate: string;
 }
 

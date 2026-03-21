@@ -3,10 +3,10 @@ import { KoreanCardDetail } from '@/types/schemes';
 import styles from './WordSection.module.scss';
 import { Fragment } from 'react';
 
-const levelStars = {
+const difficultyStars: Record<string, string> = {
   easy: '★★★',
-  medium: '★★',
-  hard: '★'
+  normal: '★★',
+  hard: '★',
 };
 
 interface WordSectionProps {
@@ -14,7 +14,8 @@ interface WordSectionProps {
 }
 
 const WordSection = ({ card }: WordSectionProps) => {
-  const levelLabel = levelStars[card.level as keyof typeof levelStars] || '';
+  const difficultyTopic = card.topics.find((t) => t in difficultyStars);
+  const levelLabel = difficultyTopic ? difficultyStars[difficultyTopic] : '';
 
   return (
     <>
