@@ -7,7 +7,8 @@ const intlMiddleware = createMiddleware(routing);
 const PROTECTED_PATHS = ['/settings', '/study'];
 
 function isProtectedPath(pathname: string): boolean {
-  return PROTECTED_PATHS.some((path) => pathname.includes(path));
+  const segments = pathname.split('/');
+  return PROTECTED_PATHS.some((path) => segments.includes(path.slice(1)));
 }
 
 export default async function middleware(request: NextRequest) {
