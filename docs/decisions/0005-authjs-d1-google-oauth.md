@@ -80,17 +80,10 @@ return handlers.GET(request);
 
 ### 4. Route Handler vs Server Action 역할 분리
 
-Auth.js 관련 코드는 route.ts와 Server Action 두 곳에 존재한다. 역할이 다르다:
+Auth.js에서의 route.ts / Server Action 역할 분리는 RFC-0008의 "Route Handler vs Server Action 선택 기준"을 따른다.
 
-| | Route Handler (`/api/auth/[...nextauth]/route.ts`) | Server Action (`src/api/auth-actions.ts`) |
-|---|---|---|
-| **역할** | OAuth 콜백 수신, CSRF 토큰 검증, 세션 쿠키 설정 | UI에서 로그인/로그아웃 트리거 |
-| **호출자** | Google OAuth 서버가 리다이렉트로 호출 | 우리 앱의 form action에서 호출 |
-| **삭제 가능?** | 불가 — 외부(Google)가 이 URL을 직접 호출 | Server Action 대신 route.ts로도 가능하지만 불필요 |
-
-Route Handler가 필요한 이유: Google OAuth 플로우에서 사용자가 Google 로그인을 완료하면, Google이 `/api/auth/callback/google` URL로 브라우저를 리다이렉트한다. 이 URL은 **외부에서 HTTP GET/POST로 직접 접근**해야 하므로 route.ts가 필수다. Server Action은 Next.js 내부 RPC 형태이므로 외부 리다이렉트 대상이 될 수 없다.
-
-`signIn()`/`signOut()`을 Server Action으로 분리하는 이유: 로그인/로그아웃 버튼은 우리 앱 내부의 UI 이벤트다. form action으로 Server Action을 호출하면 클라이언트 컴포넌트에 서버 로직이 섞이지 않고, `src/api/auth-actions.ts`에 인증 관련 액션을 모을 수 있다.
+- **Route Handler** (`/api/auth/[...nextauth]/route.ts`): Google OAuth 콜백 수신. 외부(Google)가 직접 HTTP로 호출하므로 route.ts 필수
+- **Server Action** (`src/api/auth-actions.ts`): `signInWithGoogle()`, `signOutAction()`. 우리 앱 UI에서 form action으로 호출
 
 ### 5. jose v6 override
 
