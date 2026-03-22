@@ -48,18 +48,44 @@ import Google from "next-auth/providers/google";
 import { D1Adapter } from "@auth/d1-adapter";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-const authResult = async () => {
+export async function getAuth() {
   const { env } = await getCloudflareContext({ async: true });
   return NextAuth({
     providers: [Google],
     adapter: D1Adapter(env.DB),
   });
-};
-
-export const { handlers, signIn, signOut, auth } = await authResult();
+}
 ```
 
-### 4. jose v6 override
+**일반적인 Auth.js v5 패턴과 다른 이유:**
+
+일반적으로는 모듈 레벨에서 `export const { auth, signIn, signOut, handlers } = NextAuth(...)` 로 내보낸다. 그러나 Cloudflare 환경에서는 D1 바인딩을 얻기 위해 `getCloudflareContext()`를 호출해야 하고, 이것이 async이므로 모듈 레벨 export가 불가능하다. 대신 `getAuth()` async 함수로 감싸서, 호출 시점에 바인딩을 얻는다.
+
+```ts
+// 사용 예시: Server Component에서 세션 확인
+const { auth } = await getAuth();
+const session = await auth();
+// session?.user?.id 로 userId 접근
+
+// 사용 예시: Server Action에서 userId 가져오기
+const { auth } = await getAuth();
+const session = await auth();
+if (!session?.user?.id) throw new Error('Not authenticated');
+const userId = session.user.id;
+
+// 사용 예시: Route Handler (src/app/api/auth/[...nextauth]/route.ts)
+const { handlers } = await getAuth();
+return handlers.GET(request);
+```
+
+### 4. Route Handler vs Server Action 역할 분리
+
+Auth.js에서의 route.ts / Server Action 역할 분리는 RFC-0008의 "Route Handler vs Server Action 선택 기준"을 따른다.
+
+- **Route Handler** (`/api/auth/[...nextauth]/route.ts`): Google OAuth 콜백 수신. 외부(Google)가 직접 HTTP로 호출하므로 route.ts 필수
+- **Server Action** (`src/api/auth-actions.ts`): `signInWithGoogle()`, `signOutAction()`. 우리 앱 UI에서 form action으로 호출
+
+### 5. jose v6 override
 
 Auth.js가 내부적으로 사용하는 `jose` 라이브러리 v5는 Cloudflare Workers의 crypto API와 호환되지 않는다. pnpm overrides로 v6을 강제한다:
 

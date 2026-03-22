@@ -1,7 +1,7 @@
 import { Category } from '@/types/Category';
 import { useCardDetailCache } from './useCardDetailCache';
 import { getLearningCards, postStudyInfo } from '@/api/study';
-import { StudyService } from '@/services/StudyService';
+import { StudyService } from '@/lib/StudyService';
 import { Rating } from 'ts-fsrs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';

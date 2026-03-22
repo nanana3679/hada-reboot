@@ -37,6 +37,33 @@ RFC-0004에서 Spring Boot를 제거하고 Next.js API Routes로 전환했다. �
 변경 후: 클라이언트 컴포넌트 → src/api/decks.ts ('use server' + getDb() 직접 호출) → D1
 ```
 
+### 4. Route Handler vs Server Action 선택 기준
+
+프로젝트 전반에 걸쳐 route.ts와 Server Action 중 어떤 것을 사용할지에 대한 기준이다.
+
+**Server Action을 사용하는 경우 (기본값):**
+
+- 우리 앱의 UI에서 호출하는 모든 데이터 조회/저장
+- 예: 단어 검색, 덱 목록, 학습 결과 저장, 사용자 설정, 로그인/로그아웃 트리거
+- 이유: 타입 안전, HTTP 오버헤드 없음, `getDb()` 직접 접근 가능
+
+**Route Handler(route.ts)를 사용하는 경우:**
+
+- 외부 시스템이 HTTP로 직접 호출해야 하는 엔드포인트
+- 예: Auth.js OAuth 콜백 (`/api/auth/[...nextauth]/route.ts`) — Google이 인증 완료 후 이 URL로 리다이렉트
+- 예: 웹훅 수신, 외부 서비스 연동, 공개 API 제공
+- 이유: 외부에서는 Server Action(내부 RPC)을 호출할 수 없으므로 HTTP 엔드포인트가 필수
+
+**판단 기준 요약:**
+
+```
+호출자가 누구인가?
+├── 우리 앱 내부 (컴포넌트, 훅) → Server Action
+└── 외부 (Google OAuth, 웹훅, curl, 다른 서비스) → Route Handler
+```
+
+현재 프로젝트에서 route.ts가 필요한 곳은 `/api/auth/[...nextauth]/route.ts` 하나뿐이다. 나머지는 모두 Server Action으로 처리한다.
+
 ## Alternatives Considered
 
 ### 절대 URL 사용 (BASE_URL 환경변수)
