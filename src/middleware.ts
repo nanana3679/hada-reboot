@@ -1,16 +1,30 @@
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default createMiddleware(routing);
+const intlMiddleware = createMiddleware(routing);
+
+const PROTECTED_PATHS = ['/settings', '/study'];
+
+function isProtectedPath(pathname: string): boolean {
+  return PROTECTED_PATHS.some((path) => pathname.includes(path));
+}
+
+export default async function middleware(request: NextRequest) {
+  if (isProtectedPath(request.nextUrl.pathname)) {
+    const sessionToken =
+      request.cookies.get('authjs.session-token') ??
+      request.cookies.get('__Secure-authjs.session-token');
+
+    if (!sessionToken) {
+      const loginUrl = new URL('/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  return intlMiddleware(request);
+}
 
 export const config = {
-  // Match only internationalized pathnames
-  // matcher: ['/', '/:path*', '/(ar|en|es|fr|ja|ko|mn|ms|ru|th|vi|zh)/:path*']
-
-  matcher: [
-    // Match all pathnames except for
-    // - … if they start with `/api`, `/_next` or `/_vercel`
-    // - … the ones containing a dot (e.g. `favicon.ico`)
-    '/((?!api|_next|_vercel|.*\\..*).*)'
-  ]
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)',],
 };
