@@ -48,6 +48,8 @@ CREATE TABLE IF NOT EXISTS "accounts" (
   "scope" text DEFAULT NULL,
   "id_token" text DEFAULT NULL,
   "session_state" text DEFAULT NULL,
+  "oauth_token_secret" text DEFAULT NULL,
+  "oauth_token" text DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
