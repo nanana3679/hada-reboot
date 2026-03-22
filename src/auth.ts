@@ -8,5 +8,6 @@ export async function getAuth() {
   return NextAuth({
     providers: [Google],
     adapter: D1Adapter(env.DB),
+    trustHost: true,
   });
 }

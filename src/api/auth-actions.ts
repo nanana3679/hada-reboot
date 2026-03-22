@@ -1,13 +1,16 @@
 'use server';
 
+import { redirect } from 'next/navigation';
 import { getAuth } from '@/auth';
 
 export async function signInWithGoogle() {
   const { signIn } = await getAuth();
-  await signIn('google');
+  const url = await signIn('google', { redirect: false });
+  redirect(url);
 }
 
 export async function signOutAction() {
   const { signOut } = await getAuth();
-  await signOut();
+  const url = await signOut({ redirect: false });
+  redirect(url);
 }
