@@ -7,14 +7,18 @@ import { getDb } from '@/db';
 import { words, userCards } from '@/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { invalidateUserDeckCache } from '@/lib/cache';
+import { getAuth } from '@/auth';
 
 const STATE_NAMES = ['New', 'Learning', 'Review', 'Relearning'] as const;
 
-// TODO: auth 연동 후 실제 userId로 교체
-const getUserId = (): number | null => null;
+async function getUserId(): Promise<string | null> {
+  const { auth } = await getAuth();
+  const session = await auth();
+  return session?.user?.id ?? null;
+}
 
 export const getLearningCards = async (studyType: StudyType, category: Category) => {
-  const userId = getUserId();
+  const userId = await getUserId();
   if (!userId) {
     return { size: 0, pageSize: 100, page: 1, content: [] };
   }
@@ -76,7 +80,7 @@ export const getLearningCards = async (studyType: StudyType, category: Category)
 };
 
 export const postStudyInfo = async (userCardId: number, studyInfo: StudyInfo) => {
-  const userId = getUserId();
+  const userId = await getUserId();
   if (!userId) {
     throw new Error('Not authenticated');
   }
