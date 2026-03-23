@@ -5,7 +5,7 @@ import { getAuth } from '@/auth';
 
 export async function signInWithGoogle() {
   const { signIn } = await getAuth();
-  const url = await signIn('google', { redirect: false });
+  const url = await signIn('google', { redirect: false, redirectTo: '/' });
   redirect(url);
 }
 

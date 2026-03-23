@@ -10,6 +10,9 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  sassOptions: {
+    silenceDeprecations: ['import', 'global-builtin', 'legacy-js-api', 'if-function'],
+  },
 };
 
 export default withNextIntl(nextConfig);
