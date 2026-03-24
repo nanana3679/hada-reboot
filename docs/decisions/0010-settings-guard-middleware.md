@@ -60,14 +60,36 @@
 
 이 두 값은 브라우저에서 자동 수집할 수 없다. 서버 측 기본값(`20`, `10`)을 그대로 사용한다. 사용자가 나중에 settings 페이지에서 변경할 수 있다.
 
-### 5. 쿠키 생명주기
+### 5. 브라우저 정보 수집 실패 시
+
+`UserOptionInitializer`에서 `utcOffset` 수집 또는 `initUserOption()` 서버 액션 호출이 실패하면, `REQUIRE_OPTIONS_ROUTES`에 포함된 경로에서만 `SETUP_REQUIRED` 에러를 throw한다. 그 외 경로에서는 에러 없이 넘어간다.
+
+```ts
+// src/hooks/useInitUserOption.ts
+const REQUIRE_OPTIONS_ROUTES = ['/learning'];
+```
+
+**설정 필수 경로를 제한하는 이유:**
+- `utcOffset`은 학습 날짜 기준에 직접 영향을 주므로, 학습 기능(`/learning`)에서는 정확한 설정이 필수다
+- `languageCode`는 영어(`en`)로 폴백이 가능하므로 설정 없이도 다른 페이지는 정상 동작한다
+- 설정 필수 경로를 추가하려면 `REQUIRE_OPTIONS_ROUTES` 배열에 경로를 추가하면 된다
+
+기존 `error.tsx`에서 `SETUP_REQUIRED`를 감지하면 alert 후 `/settings` 페이지로 리다이렉트하므로, 자동 수집 실패 시 사용자가 직접 설정하는 폴백 경로가 확보된다.
+
+```
+자동 수집 성공                      → user_options 생성 → 정상 흐름
+자동 수집 실패 (REQUIRE_OPTIONS 경로) → SETUP_REQUIRED throw → error.tsx → /settings 리다이렉트
+자동 수집 실패 (그 외)               → 에러 없이 통과 (영어 폴백)
+```
+
+### 6. 쿠키 생명주기
 
 | 시점 | 동작 |
 |------|------|
 | `initUserOption` 실행 | `has-options=1` 쿠키 세팅 |
 | 로그아웃 (`signOutAction`) | `has-options` 쿠키 삭제 |
 
-### 6. 변경 대상 파일
+### 7. 변경 대상 파일
 
 - `src/api/option.ts` — `getUserOption()` 에러 throw, `hasUserOption()` 추가, `initUserOption()` 추가
 - `src/hooks/useInitUserOption.ts` — 브라우저 utcOffset 수집 + `initUserOption()` 호출
