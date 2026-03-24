@@ -158,5 +158,6 @@ DB 컬럼과 Drizzle 스키마도 통일한다:
 - RFC-0004: D1 + Drizzle 백엔드 재설계 — 기존 덱 집계 및 KV 캐싱 전략
 - `docs/glossary.md` — 도메인 용어집
 - `migrations/0001_rename_topics_to_categories.sql` — DB 컬럼 리네이밍 마이그레이션
+- `src/types/Category.ts` — 81개 카테고리 union type 정의 (78개 topic + 3개 difficulty)
 - `scripts/migrate-csv-categories.py` — CSV 변환 1회용 스크립트 (예정)
 - `legacy/korean-words.csv` — 변환 전 원본 CSV
