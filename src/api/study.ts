@@ -24,7 +24,7 @@ export const getLearningCards = async (studyType: StudyType, category: Category)
   }
   const db = await getDb();
 
-  const categoryCondition = sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
+  const categoryCondition = sql`EXISTS (SELECT 1 FROM json_each(${words.categories}) WHERE json_each.value = ${category})`;
 
   const stateCondition =
     studyType === 'new'
@@ -40,7 +40,7 @@ export const getLearningCards = async (studyType: StudyType, category: Category)
       cardId: words.id,
       koreanWord: words.headword,
       homographNumber: words.homographNumber,
-      topics: words.topics,
+      categories: words.categories,
       due: userCards.due,
       stability: userCards.stability,
       difficulty: userCards.difficulty,
@@ -61,7 +61,7 @@ export const getLearningCards = async (studyType: StudyType, category: Category)
       cardId: r.cardId,
       koreanWord: r.koreanWord,
       homographNumber: r.homographNumber,
-      topics: r.topics,
+      categories: r.categories,
     },
     studyInfo: {
       due: r.due,

@@ -62,7 +62,7 @@ export const THEME_OPTIONS = [
 
 // Dummy data for api mocking
 export const DUMMY_CARD: Card = {
-  topics: ['easy'],
+  categories: ['easy'],
   cardId: 1,
   koreanWord: '사랑',
   languageCode: 'en',
@@ -73,7 +73,7 @@ export const DUMMY_KOR_CARD: KoreanCard = {
   cardId: 1,
   koreanWord: '가깝다',
   homographNumber: 1,
-  topics: ['easy'],
+  categories: ['easy'],
 };
 
 export const DUMMY_KOR_CARD_WITH_FOREIGN_WORDS: KoreanCardWithForeignWords = {

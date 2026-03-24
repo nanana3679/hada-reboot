@@ -44,7 +44,7 @@ export const getDecks = async (): Promise<Paginated<Deck>> => {
         cardCounts: sql<number>`count(*)`,
       })
       .from(words)
-      .innerJoin(sql`json_each(${words.topics})`, sql`1=1`)
+      .innerJoin(sql`json_each(${words.categories})`, sql`1=1`)
       .groupBy(sql`json_each.value`)
       .all();
 
@@ -76,7 +76,7 @@ export const getDecks = async (): Promise<Paginated<Deck>> => {
         })
         .from(userCards)
         .innerJoin(words, eq(userCards.wordId, words.id))
-        .innerJoin(sql`json_each(${words.topics})`, sql`1=1`)
+        .innerJoin(sql`json_each(${words.categories})`, sql`1=1`)
         .where(eq(userCards.userId, userId))
         .groupBy(sql`json_each.value`)
         .all();
@@ -114,7 +114,7 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
   const pageSize = 100;
   const offset = (page - 1) * pageSize;
 
-  const whereCondition = sql`EXISTS (SELECT 1 FROM json_each(${words.topics}) WHERE json_each.value = ${category})`;
+  const whereCondition = sql`EXISTS (SELECT 1 FROM json_each(${words.categories}) WHERE json_each.value = ${category})`;
 
   const [countResult, results] = await Promise.all([
     db
@@ -127,7 +127,7 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
         cardId: words.id,
         koreanWord: words.headword,
         homographNumber: words.homographNumber,
-        topics: words.topics,
+        categories: words.categories,
         translation: translations.translation,
       })
       .from(words)
@@ -146,7 +146,7 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
     cardId: r.cardId,
     koreanWord: r.koreanWord,
     homographNumber: r.homographNumber,
-    topics: r.topics,
+    categories: r.categories,
     foreignWords: r.translation ?? [],
   }));
 

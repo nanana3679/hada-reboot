@@ -121,6 +121,8 @@ DB 컬럼과 Drizzle 스키마도 통일한다:
 
 `user_cards` 테이블명은 유지한다 — "사용자의 학습 카드"로 도메인과 일치.
 
+> **마이그레이션 상태**: `topics` → `categories` DB 컬럼 리네이밍은 `migrations/0001_rename_topics_to_categories.sql`에 정의. 코드 변경은 이 RFC 브랜치에서 완료.
+
 ## Alternatives Considered
 
 ### level 컬럼 유지 + API 분기 유지
@@ -154,7 +156,7 @@ DB 컬럼과 Drizzle 스키마도 통일한다:
 ## References
 
 - RFC-0004: D1 + Drizzle 백엔드 재설계 — 기존 덱 집계 및 KV 캐싱 전략
-- RFC-0009: Server Action API 설계 — 리네이밍 적용 대상
 - `docs/glossary.md` — 도메인 용어집
-- `scripts/migrate-csv-categories.py` — CSV 변환 1회용 스크립트
+- `migrations/0001_rename_topics_to_categories.sql` — DB 컬럼 리네이밍 마이그레이션
+- `scripts/migrate-csv-categories.py` — CSV 변환 1회용 스크립트 (예정)
 - `legacy/korean-words.csv` — 변환 전 원본 CSV

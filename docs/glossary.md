@@ -24,8 +24,8 @@ Word의 **외국어 번역**. 언어별로 1:1.
 Word를 **학습 단위**로 감싼 것. Word(학습의 대상) + Translation을 학습 가능한 형태로 포함한다.
 
 - `CardListItem` — 덱 목록용 (요약 + 번역어 배열)
-- `CardDetail` — 학습 화면용 (WordDetail + FSRS State). 클라이언트 전용 타입
-- `UserCard` — DB 전용 (CardDetail + userId). `user_cards` 테이블에 대응
+- `CardDetail` — 학습 화면용 (WordDetail + FSRS State). **클라이언트 전용 타입** (`schemes.ts`에서 정의)
+- `UserCard` — **서버/DB 전용** (CardDetail + userId). Drizzle 스키마의 `userCards`가 이에 대응. 클라이언트에 내려줄 때는 `CardDetail`로 변환
 
 ### Card State (`CardState` / ts-fsrs `Card`)
 
@@ -88,7 +88,7 @@ Category를 UI에서 그룹핑하기 위한 **프론트엔드 전용 상수**. D
 
 | 도메인 개념 | DB 테이블 | 코드 타입 | 변수/함수 접두사 |
 |------------|-----------|----------|----------------|
-| Word | `words` | `Word` (미정의, 정리 필요) | `word`, `getWordDetail` |
+| Word | `words` | 현재 `KoreanCard` → `WordSummary` 예정, `KoreanCardDetail` → `WordDetail` 예정 | `word`, `getWordDetail` |
 | Translation | `translations` | — | `trans`, `translation` |
 | Card State | `user_cards` | `CardState` (ts-fsrs `Card` 래퍼) | `card`, `userCard` |
 | Deck | — (집계) | `Deck` | `deck`, `getDecks` |

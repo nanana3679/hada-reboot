@@ -12,7 +12,7 @@ export const words = sqliteTable('words', {
   pronunciation: text('pronunciation'),
   frequency: real('frequency'),
   meaningCategory: text('meaning_category'),
-  topics: text('topics', { mode: 'json' }).$type<string[]>().notNull().default([]),
+  categories: text('categories', { mode: 'json' }).$type<string[]>().notNull().default([]),
   definition: text('definition', { mode: 'json' }).$type<string[]>().notNull(),
   examples: text('examples', { mode: 'json' }).$type<string[]>().notNull().default([]),
   conjugation: text('conjugation'),

@@ -8,7 +8,7 @@ export interface MockWord {
   pronunciation: string | null;
   frequency: number;
   meaningCategory: string | null;
-  topics: string[];
+  categories: string[];
   definition: string;
   examples: string | null;
   translations: Array<{
@@ -30,7 +30,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 131.0,
     meaningCategory: '개념 > 양',
-    topics: ['NUMBER'],
+    categories: ['NUMBER'],
     definition: '재주나 능력, 실력 등이 원래보다 못하게 되다.',
     examples:
       '<구> 계산 실력이 줄다.\n<구> 능력이 줄다.\n<문장> 나이가 드니까 기억력이 눈에 띄게 준다.',
@@ -59,7 +59,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 3057.0,
     meaningCategory: null,
-    topics: ['TRANSPORT'],
+    categories: ['TRANSPORT'],
     definition: '내놓은 집이나 방 등이 계약이 이루어지다.',
     examples: '<구> 방이 나가다.\n<문장> 요즘은 월세보다 전세가 잘 나가요.',
     translations: [
@@ -79,7 +79,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 168.0,
     meaningCategory: '개념 > 양',
-    topics: ['CONCEPT'],
+    categories: ['CONCEPT'],
     definition: '전혀. 도무지.',
     examples: '<구> 통 관심이 없다.\n<구> 통 듣지 않다.\n<문장> 그는 남의 말을 통 듣지 않는다.',
     translations: [
@@ -99,7 +99,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 290.0,
     meaningCategory: '자연 > 자연 현상',
-    topics: ['NATURE'],
+    categories: ['NATURE'],
     definition: '자연 현상이 나타나는 형세.',
     examples: '<구> 가을 기운.\n<구> 봄 기운.\n<문장> 곳곳에 가을 기운이 물들어 있다.',
     translations: [
@@ -119,7 +119,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 515.0,
     meaningCategory: null,
-    topics: ['HOSPITAL'],
+    categories: ['HOSPITAL'],
     definition: '마음이 쓰리고 괴롭다.',
     examples: '<구> 가슴이 아프다.\n<구> 마음이 아프다.\n<문장> 불쌍한 아이의 모습을 보니 가슴이 아팠다.',
     translations: [
@@ -139,7 +139,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 1044.0,
     meaningCategory: null,
-    topics: ['NEWS'],
+    categories: ['NEWS'],
     definition: '나라의 밖. 또는 외국.',
     examples: '<구> 해외 경험.\n<구> 해외 관광.\n<문장> 그는 해외에서 십 년간 유학 생활을 했다.',
     translations: [
@@ -159,7 +159,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 3197.0,
     meaningCategory: '경제 > 돈',
-    topics: ['ECONOMY'],
+    categories: ['ECONOMY'],
     definition: '물건을 사고팔거나 일한 값으로 주고받는 것.',
     examples: '<구> 돈을 벌다.\n<구> 돈을 쓰다.\n<문장> 그는 열심히 일해서 돈을 많이 벌었다.',
     translations: [
@@ -179,7 +179,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 37.0,
     meaningCategory: '자연 > 지형',
-    topics: ['NATURE'],
+    categories: ['NATURE'],
     definition: "'주변'의 뜻을 나타내는 말.",
     examples: '<구> 강가.\n<구> 길가.\n<구> 냇가.\n<구> 창가.',
     translations: [
@@ -199,7 +199,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 37.0,
     meaningCategory: null,
-    topics: ['CONCEPT'],
+    categories: ['CONCEPT'],
     definition: '회의 등에서 어떤 안건에 대해 표결을 할 때 찬성한다는 표시.',
     examples: '<구> 가와 부.\n<구> 가를 밝히다.\n<문장> 곧 표결을 시작하오니 가인지 부인지 여부를 정해 주시기 바랍니다.',
     translations: [
@@ -220,7 +220,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 112.0,
     meaningCategory: null,
-    topics: ['CONCEPT'],
+    categories: ['CONCEPT'],
     definition: '앞으로 이루고 싶은 것을 마음속으로 바라거나 생각하다.',
     examples: '<구> 꿈꾸던 곳.\n<구> 미래를 꿈꾸다.\n<문장> 나는 세계 여행을 꿈꾸고 있다.',
     translations: [
@@ -240,7 +240,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 231.0,
     meaningCategory: '경제 > 돈',
-    topics: ['ECONOMY'],
+    categories: ['ECONOMY'],
     definition: '값이나 비용을 내다.',
     examples: '<구> 값을 치르다.\n<구> 비용을 치르다.\n<문장> 음식을 먹은 후 값을 치르고 나왔다.',
     translations: [
@@ -260,7 +260,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 428.0,
     meaningCategory: '개념 > 양',
-    topics: ['NUMBER'],
+    categories: ['NUMBER'],
     definition: '수나 양이 본디보다 커지다.',
     examples: '<구> 수가 늘어나다.\n<구> 인구가 늘어나다.\n<문장> 매년 교통사고 건수가 늘어나고 있다.',
     translations: [
@@ -280,7 +280,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 60.0,
     meaningCategory: null,
-    topics: ['ACTION'],
+    categories: ['ACTION'],
     definition: '눈물이 눈에 가득 고이다.',
     examples: '<구> 눈물이 어리다.\n<구> 눈에 눈물이 어리다.\n<문장> 감동적인 장면에 눈물이 어렸다.',
     translations: [
@@ -300,7 +300,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 96.0,
     meaningCategory: '느낌 > 느낌',
-    topics: ['FEELING'],
+    categories: ['FEELING'],
     definition: '어떤 대상이 무섭거나 무서운 느낌이 있다.',
     examples: '<구> 두려운 감정.\n<구> 두려운 마음.\n<문장> 혼자 밤길을 걷는 것이 두렵다.',
     translations: [
@@ -320,7 +320,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 517.0,
     meaningCategory: null,
-    topics: ['CONCEPT'],
+    categories: ['CONCEPT'],
     definition: '어떤 분야에 상당한 지식과 경험을 가지고 그 분야만을 연구하거나 맡아서 함.',
     examples: '<구> 전문 기관.\n<구> 전문 분야.\n<문장> 그는 법률 전문 변호사이다.',
     translations: [
@@ -340,7 +340,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 365.0,
     meaningCategory: '느낌 > 느낌',
-    topics: ['FEELING'],
+    categories: ['FEELING'],
     definition: '어떤 의무나 책임을 짐.',
     examples: '<구> 부담을 느끼다.\n<구> 부담을 주다.\n<문장> 학비가 큰 부담이 되고 있다.',
     translations: [
@@ -361,7 +361,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 37.0,
     meaningCategory: '자연 > 지형',
-    topics: ['NATURE'],
+    categories: ['NATURE'],
     definition: '어떤 장소나 물건의 둘레나 끝부분.',
     examples: '<구> 가를 꾸미다.\n<구> 가에 앉다.\n<문장> 공원의 중앙에는 잔디밭이 있고 가에는 울타리가 둘러쳐져 있었다.',
     translations: [
@@ -381,7 +381,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 32.0,
     meaningCategory: null,
-    topics: ['CONCEPT'],
+    categories: ['CONCEPT'],
     definition: '상황이나 상태가 좋은 방향으로 바뀜.',
     examples: '<구> 경기 호전.\n<구> 상태가 호전되다.\n<문장> 환자의 상태가 눈에 띄게 호전되었다.',
     translations: [
@@ -401,7 +401,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 120.0,
     meaningCategory: null,
-    topics: ['CONCEPT'],
+    categories: ['CONCEPT'],
     definition: '사물의 기초가 되는 것.',
     examples: '<구> 토대가 되다.\n<구> 토대를 마련하다.\n<문장> 이 연구는 향후 연구의 토대가 될 것이다.',
     translations: [
@@ -421,7 +421,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 45.0,
     meaningCategory: null,
-    topics: ['CONCEPT'],
+    categories: ['CONCEPT'],
     definition: '어떤 현상이나 사물을 직접 설명하지 않고 다른 비슷한 현상이나 사물에 빗대어 설명하는 것.',
     examples: '<구> 비유를 들다.\n<구> 비유를 하다.\n<문장> 그는 인생을 여행에 비유했다.',
     translations: [
@@ -441,7 +441,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 88.0,
     meaningCategory: null,
-    topics: ['NEWS'],
+    categories: ['NEWS'],
     definition: '계약이나 조약 등을 맺음.',
     examples: '<구> 계약 체결.\n<구> 조약을 체결하다.\n<문장> 양국은 무역 협정을 체결했다.',
     translations: [
@@ -461,7 +461,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 95.0,
     meaningCategory: '경제 > 돈',
-    topics: ['ECONOMY'],
+    categories: ['ECONOMY'],
     definition: '물가, 주가, 기온 등이 떨어짐.',
     examples: '<구> 주가 하락.\n<구> 가격이 하락하다.\n<문장> 유가가 크게 하락했다.',
     translations: [
@@ -481,7 +481,7 @@ export const mockWords: MockWord[] = [
 
     frequency: 75.0,
     meaningCategory: null,
-    topics: ['ACTION'],
+    categories: ['ACTION'],
     definition: '어떤 일에 대해 옳지 않다거나 마음에 들지 않는다고 반대 의견을 주장함.',
     examples: '<구> 항의를 하다.\n<구> 항의를 제기하다.\n<문장> 시민들은 정부의 정책에 항의했다.',
     translations: [
