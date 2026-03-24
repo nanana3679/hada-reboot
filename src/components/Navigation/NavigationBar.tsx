@@ -6,7 +6,7 @@ import { Icon } from '@/components/material-components/IconButton/IconButton';
 
 import styles from './NavigationBar.module.scss';
 import classNames from 'classnames';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 
 const NavigationBar = ({
   destinations,
