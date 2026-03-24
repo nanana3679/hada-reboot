@@ -7,6 +7,7 @@ import { QueryProvider } from '@/providers/QueryProvider';
 import ErrorBoundaryWrapper from '@/providers/ErrorBoundaryWrapper';
 
 import { getAuth } from '@/auth';
+import UserOptionInitializer from '@/components/UserOptionInitializer';
 
 import styles from './layout.module.scss';
 
@@ -23,6 +24,7 @@ const NavigationLayout = async ({ children }: { children: React.ReactNode }) => 
             <I18nProvider>
               <SnackbarProvider>
                 <Navigation isLoggedIn={isLoggedIn} />
+                {isLoggedIn && <UserOptionInitializer />}
                 {children}
               </SnackbarProvider>
             </I18nProvider>

@@ -12,10 +12,24 @@ async function getUserId(): Promise<string | null> {
   return session?.user?.id ?? null;
 }
 
+export const hasUserOption = async (): Promise<boolean> => {
+  const userId = await getUserId();
+  if (!userId) return false;
+
+  const db = await getDb();
+  const option = await db
+    .select({ id: userOptions.id })
+    .from(userOptions)
+    .where(eq(userOptions.userId, userId))
+    .get();
+
+  return !!option;
+};
+
 export const getUserOption = async (): Promise<UserOption> => {
   const userId = await getUserId();
   if (!userId) {
-    return { dailyReviewWords: 20, dailyStudyWords: 10, utcOffset: 0, languageCode: 'en' };
+    throw new Error('Not authenticated');
   }
 
   const db = await getDb();
@@ -26,7 +40,7 @@ export const getUserOption = async (): Promise<UserOption> => {
     .get();
 
   if (!option) {
-    return { dailyReviewWords: 20, dailyStudyWords: 10, utcOffset: 0, languageCode: 'en' };
+    throw new Error('User option not found');
   }
 
   return {
