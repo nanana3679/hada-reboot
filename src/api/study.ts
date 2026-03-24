@@ -26,7 +26,7 @@ async function getDailyLimits(db: Awaited<ReturnType<typeof getDb>>, userId: str
   return { dailyStudyWords: options?.dailyStudyWords ?? 10, dailyReviewWords: options?.dailyReviewWords ?? 20 };
 }
 
-export const getLearningCards = async (studyType: StudyType, category: Category, lang: Locale = 'en') => {
+export const getCards = async (studyType: StudyType, category: Category, lang: Locale = 'en') => {
   const userId = await getUserId();
   if (!userId) {
     return { size: 0, pageSize: 100, page: 1, content: [] as CardDetail[] };
@@ -164,7 +164,7 @@ export const getLearningCards = async (studyType: StudyType, category: Category,
   return { size: content.length, pageSize: dailyReviewWords, page: 1, content };
 };
 
-export const postStudyInfo = async (userCardId: number | null, wordId: number, cardState: CardState) => {
+export const postFsrs = async (userCardId: number | null, wordId: number, cardState: CardState) => {
   const userId = await getUserId();
   if (!userId) {
     throw new Error('Not authenticated');

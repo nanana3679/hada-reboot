@@ -1,5 +1,5 @@
 import { Category } from '@/types/Category';
-import { getLearningCards, postStudyInfo } from '@/api/study';
+import { getCards, postFsrs } from '@/api/study';
 import { StudyService } from '@/lib/StudyService';
 import { Rating } from 'ts-fsrs';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -11,8 +11,8 @@ export const useStudyQueue = (category: Category) => {
   const { data: studyService, isPending: isLoading } = useQuery({
     queryKey: ['studyService', category],
     queryFn: async () => {
-      const newCards = await getLearningCards('new', category);
-      const reviewCards = await getLearningCards('review', category);
+      const newCards = await getCards('new', category);
+      const reviewCards = await getCards('review', category);
       return new StudyService([...newCards.content, ...reviewCards.content]);
     }
   });
@@ -34,7 +34,7 @@ export const useStudyQueue = (category: Category) => {
       return withStudyService(studyService, async (service) => {
         const newCard = service.repeat(rating);
         forceUpdate((n) => n + 1);
-        const result = await postStudyInfo(newCard.userCardId, newCard.word.wordId, newCard.fsrs);
+        const result = await postFsrs(newCard.userCardId, newCard.word.wordId, newCard.fsrs);
         // New 카드 INSERT 후 userCardId 갱신
         if (newCard.userCardId === null && result.userCardId) {
           service.updateUserCardId(newCard.word.wordId, result.userCardId);
@@ -57,7 +57,7 @@ export const useStudyQueue = (category: Category) => {
 
   const currentCardDetail = studyService?.hasCards ? studyService.currentCard : null;
 
-  const StateCounts = studyService?.StateCounts ?? {
+  const stateCounts = studyService?.stateCounts ?? {
     reviewCounts: 0,
     learningCounts: 0,
     overdueCounts: 0,
@@ -76,7 +76,7 @@ export const useStudyQueue = (category: Category) => {
     currentCardDetail,
     isLoading,
     isCompleted,
-    StateCounts,
+    stateCounts,
     repeat,
     error,
     clearError

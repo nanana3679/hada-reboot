@@ -74,7 +74,7 @@ export class StudyService {
     return this.f.repeat(this.currentCard.fsrs, new Date());
   }
 
-  public get StateCounts() {
+  public get stateCounts() {
     const now = new Date();
     const reviewCounts = this.queue.filter(
       (card) => card.fsrs.state === State.Review && card.fsrs.due >= now
