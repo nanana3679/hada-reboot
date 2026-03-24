@@ -95,16 +95,21 @@ export const getDecks = async (): Promise<Paginated<Deck>> => {
   }
 
   // 3. 글로벌 + 유저 합쳐서 응답
-  const decks = Object.entries(globalStats).map(([category, cardCounts]) => ({
-    category,
-    cardCounts: cardCounts as number,
-    ...(userCardStats[category] ?? {
-      newCounts: 0,
+  const decks = Object.entries(globalStats).map(([category, cardCounts]) => {
+    const stats = userCardStats[category] ?? {
       learningCounts: 0,
       overdueCounts: 0,
       maturityCounts: 0,
-    }),
-  }));
+    };
+    return {
+      category,
+      cardCounts: cardCounts as number,
+      newCounts: (cardCounts as number) - stats.learningCounts - stats.overdueCounts - stats.maturityCounts,
+      learningCounts: stats.learningCounts,
+      overdueCounts: stats.overdueCounts,
+      maturityCounts: stats.maturityCounts,
+    };
+  });
 
   return { size: decks.length, pageSize: 100, page: 1, content: decks };
 };

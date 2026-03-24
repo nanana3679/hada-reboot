@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { Deck } from '@/types/schemes';
 import { LEARNING_PROGRESS_BAR_COLORS } from '@/constants/colors';
@@ -19,10 +19,6 @@ const DeckProgressBar = ({
   isExpanded
 }: DeckProgressBarProps) => {
   const { newCounts, learningCounts, maturityCounts } = deck;
-
-  useEffect(() => {
-    console.log(deck);
-  }, [deck]);
 
   const progressBarSegments: ProgressBarSegment[] = [
     {
