@@ -1,4 +1,3 @@
-import { Category } from './Category';
 import { Locale } from './Locale';
 import { SnakeToCamelCase } from './typeTransform';
 import { Card as FSRSCard } from 'ts-fsrs';
@@ -12,22 +11,11 @@ export type Paginated<T> = {
   content: T[];
 };
 
-export interface Card {
-  categories: string[];
-  cardId: number;
-  koreanWord: string;
-  languageCode: Locale;
-  foreignWord: string;
-}
-
-export interface KoreanCard {
+export interface WordDetail {
+  wordId: number;
+  word: string;
   homographNumber: number;
   categories: string[];
-  cardId: number;
-  koreanWord: string;
-}
-
-export interface KoreanCardDetail extends KoreanCard {
   meanings: Array<{
     foreignMeaning: string;
     partsOfSpeech: string;
@@ -41,34 +29,29 @@ export interface KoreanCardDetail extends KoreanCard {
   }>;
 }
 
-export interface KoreanCardWithForeignWords extends KoreanCard {
+export interface WordListItem {
+  wordId: number;
+  word: string;
+  homographNumber: number;
+  categories: string[];
   foreignWords: string[];
 }
 
-export type StudyInfo = {
+export type CardState = {
   [K in keyof FSRSCard as SnakeToCamelCase<K>]: FSRSCard[K];
 } & {
   lastRating?: Date;
 };
 
-export type StudyInfoDTO = Omit<
-  StudyInfo,
-  'due' | 'lastReview' | 'state' | 'elapsedDays' | 'learningSteps'
-> & {
-  due: string;
-  lastReview: string | null;
-  state: 'New' | 'Learning' | 'Review' | 'Relearning';
-};
-
-export interface UserCard {
-  koreanCard: KoreanCard;
-  studyInfo: StudyInfo;
-  userCardId: number;
-}
-
-export interface UserCardDTO {
-  koreanCard: KoreanCard;
-  studyInfo: StudyInfoDTO;
+export interface CardDetail {
+  /** WordDetail KV 캐싱 구현 후 WordDetail로 확장 예정 */
+  word: {
+    wordId: number;
+    word: string;
+    homographNumber: number;
+    categories: string[];
+  };
+  state: CardState;
   userCardId: number;
 }
 
@@ -94,8 +77,3 @@ export type UserOption = {
   languageCode: Locale;
 };
 
-export type TokenDTO = {
-  accessToken: string;
-  refreshToken: string;
-  isSetup: boolean;
-};
