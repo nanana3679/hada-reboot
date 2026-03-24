@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { getAuth } from '@/auth';
+import { cookies } from 'next/headers';
 
 export async function signInWithGoogle() {
   const { signIn } = await getAuth();
@@ -10,6 +11,7 @@ export async function signInWithGoogle() {
 }
 
 export async function signOutAction() {
+  (await cookies()).delete('has-options');
   const { signOut } = await getAuth();
   const url = await signOut({ redirect: false });
   redirect(url);

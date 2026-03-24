@@ -5,6 +5,8 @@ import { getDb } from '@/db';
 import { userOptions } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { getAuth } from '@/auth';
+import { cookies } from 'next/headers';
+import { Locale } from '@/types/Locale';
 
 async function getUserId(): Promise<string | null> {
   const { auth } = await getAuth();
@@ -12,10 +14,24 @@ async function getUserId(): Promise<string | null> {
   return session?.user?.id ?? null;
 }
 
+export const hasUserOption = async (): Promise<boolean> => {
+  const userId = await getUserId();
+  if (!userId) return false;
+
+  const db = await getDb();
+  const option = await db
+    .select({ id: userOptions.id })
+    .from(userOptions)
+    .where(eq(userOptions.userId, userId))
+    .get();
+
+  return !!option;
+};
+
 export const getUserOption = async (): Promise<UserOption> => {
   const userId = await getUserId();
   if (!userId) {
-    return { dailyReviewWords: 20, dailyStudyWords: 10, utcOffset: 0, languageCode: 'en' };
+    throw new Error('Not authenticated');
   }
 
   const db = await getDb();
@@ -26,7 +42,7 @@ export const getUserOption = async (): Promise<UserOption> => {
     .get();
 
   if (!option) {
-    return { dailyReviewWords: 20, dailyStudyWords: 10, utcOffset: 0, languageCode: 'en' };
+    throw new Error('User option not found');
   }
 
   return {
@@ -64,4 +80,23 @@ export const postUserOption = async (userOption: UserOption): Promise<UserOption
     .run();
 
   return getUserOption();
+};
+
+export const initUserOption = async (languageCode: Locale, utcOffset: number): Promise<void> => {
+  const exists = await hasUserOption();
+
+  if (!exists) {
+    await postUserOption({
+      languageCode,
+      utcOffset,
+      dailyReviewWords: 20,
+      dailyStudyWords: 10,
+    });
+  }
+
+  (await cookies()).set('has-options', '1', {
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
+  });
 };
