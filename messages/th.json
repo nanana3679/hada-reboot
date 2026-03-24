@@ -24,7 +24,7 @@
 
   "menu": {
     "difficulty": "ความยาก",
-    "meaning": "ความหมาย",
+    "topic": "หัวข้อ",
     "settings": "การตั้งค่า",
     "guest": "แขก"
   },
