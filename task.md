@@ -9,8 +9,9 @@
 - [x] D1 바인딩 설정 (`wrangler.jsonc`, `env.d.ts`)
 - [x] CSV → D1 시딩 스크립트 작성
 - [x] Mock API → D1 실제 쿼리로 전환
-- [x] KV 캐싱 구현 (덱 집계) — RFC-0006 브랜치에서 완료
+- [x] KV 캐싱 구현 (덱 집계)
 - [x] level → topics → categories 통합 반영 (RFC-0006)
+- [ ] Word KV 캐싱 — 언어별로 words+translations join 결과를 KV에 캐싱하여 학습 카드 로드 최적화
 
 ## refactor: API 클라이언트 구조 변경 (RFC-0008)
 
@@ -23,7 +24,7 @@
 ## refactor: 타입 개선
 
 - [x] `src/types/schemes.ts` 새 API 응답 타입에 맞게 업데이트
-- [ ] `src/utils/converter.ts` 삭제 (FSRS 래퍼 완성 후)
+- [x] `src/utils/converter.ts` 삭제 (RFC-0006 타입 재설계로 제거됨)
 
 ## feat: 인증
 

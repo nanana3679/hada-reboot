@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserCard } from '@/types/schemes';
+import { CardDetail } from '@/types/schemes';
 import { Category } from '@/types/Category';
 
-type StudyQueueState = Partial<Record<Category, UserCard[]>>;
+type StudyQueueState = Partial<Record<Category, CardDetail[]>>;
 
 const initialState: StudyQueueState = {};
 

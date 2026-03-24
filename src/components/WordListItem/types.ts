@@ -1,9 +1,9 @@
 export interface WordListItemProps {
-  KoreanWord: string;
-  ForeignWord: string;
+  headword: string;
+  translation: string;
   isExpanded?: boolean;
   isHideKorean?: boolean;
   isHideForeign?: boolean;
   homographNumber: number;
-  cardId: number;
+  wordId: number;
 }

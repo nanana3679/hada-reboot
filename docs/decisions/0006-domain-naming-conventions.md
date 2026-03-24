@@ -82,10 +82,9 @@ export const CATEGORY_GROUP = {
 
 | 현재 | 제안 | 사유 |
 |------|------|------|
-| `KoreanCard` | 삭제 | 베이스 타입으로만 사용, 사용처 2곳이므로 각 타입에 직접 선언 |
-| `KoreanCardWithForeignWords` | `CardListItem` | 용도 기반 — 덱 목록의 각 항목 |
-| `KoreanCardDetail` | `WordDetail` | Word 상세 정보 (사전 데이터 + Translation + Homographs) |
-| `UserCard` (schemes.ts) | `CardDetail` | 클라이언트용 — WordDetail + FSRS State. DB의 `UserCard`(user_cards)는 여기에 userId가 추가된 서버 전용 개념 |
+| `KoreanCard` + `KoreanCardDetail` | `Word` | words + translations 조인. 동형어(headword + homographNumber) 단위. 번역어(`translation: string`)와 외국어 정의(`definition: string`) 포함 |
+| `KoreanCardWithForeignWords` | `WordListItem` | 덱은 Word 묶음이므로 Word 관점 타입 — 덱 목록의 각 항목 |
+| `UserCard` (schemes.ts) | `CardDetail` | 클라이언트용 — Word + FSRS State. DB의 `UserCard`(user_cards)는 여기에 userId가 추가된 서버 전용 개념 |
 | `Card` (schemes.ts) | 삭제 | Word + Translation을 담는 레거시 타입, 도메인의 Card와 혼동 |
 | `CategoryType` | 삭제 | `CATEGORY_GROUP` 상수로 대체 |
 | `StudyInfo` | `CardState` | ts-fsrs `Card`의 camelCase 래퍼. `StudyInfo`는 모호하므로 도메인 용어에 맞춰 변경 |
@@ -100,8 +99,8 @@ export const CATEGORY_GROUP = {
 | `koreanWord` | `word` | 한국어 학습 앱이므로 "korean" 접두사 불필요 |
 | `cardId` (Word 도메인) | `wordId` | Word를 표현하는 타입에서는 `wordId` 사용 |
 | `cardId` (Card 도메인) | `cardId` 유지 | Card를 표현하는 타입에서는 유지 |
-| `UserCard.koreanCard` | `CardDetail.word: WordDetail` | 클라이언트에서는 `CardDetail`을 사용. 이전에는 구현 제약으로 요약 정보만 담았으나, 이제 상세정보를 직접 포함하여 학습 시 별도 prefetching 불필요 |
-| `UserCard.studyInfo` | `CardDetail.state: CardState` | FSRS 학습 상태를 명확히 표현. 타입은 ts-fsrs `Card`의 camelCase 래퍼(`CardState`) |
+| `UserCard.koreanCard` | `CardDetail.word: Word` | 클라이언트에서는 `CardDetail`을 사용. words + translations 조인 결과를 직접 포함 |
+| `UserCard.studyInfo` | `CardDetail.fsrs: CardState` | FSRS 학습 상태. `.state.state` 중복을 피하기 위해 프로퍼티명을 `fsrs`로 결정. 타입은 ts-fsrs `Card`의 camelCase 래퍼(`CardState`) |
 
 ### E. ts-fsrs `Card` 네이밍 충돌 처리
 

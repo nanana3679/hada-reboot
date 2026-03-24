@@ -7,7 +7,7 @@ import styles from './layout.module.scss';
 import { useParams } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
-import { getKoreanCardDetail } from '@/api/cards';
+import { getWord } from '@/api/cards';
 
 export default function LearningPage() {
   const { cardId } = useParams() ?? {};
@@ -22,7 +22,7 @@ export default function LearningPage() {
 
   const { data: cardDetail, isLoading } = useQuery({
     queryKey: ['card', cardId],
-    queryFn: () => getKoreanCardDetail(+cardId)
+    queryFn: () => getWord(+cardId)
   });
 
   if (isLoading || !cardDetail) return <div>Loading...</div>;

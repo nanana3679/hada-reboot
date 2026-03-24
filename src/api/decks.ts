@@ -1,7 +1,7 @@
 'use server';
 
 import { Locale } from '@/types/Locale';
-import { Paginated, UserStudyHistory, Deck, KoreanCardWithForeignWords } from '@/types/schemes';
+import { Paginated, UserStudyHistory, Deck, WordListItem } from '@/types/schemes';
 import { Category } from '@/types/Category';
 import { getDb } from '@/db';
 import { words, translations, userStudyHistory } from '@/db/schema';
@@ -109,7 +109,7 @@ export const getDecks = async (): Promise<Paginated<Deck>> => {
   return { size: decks.length, pageSize: 100, page: 1, content: decks };
 };
 
-export const getCardsFromDeck = async (locale: Locale, category: Category, page: number): Promise<Paginated<KoreanCardWithForeignWords>> => {
+export const getCardsFromDeck = async (locale: Locale, category: Category, page: number): Promise<Paginated<WordListItem>> => {
   const db = await getDb();
   const pageSize = 100;
   const offset = (page - 1) * pageSize;
@@ -124,8 +124,8 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
       .get(),
     db
       .select({
-        cardId: words.id,
-        koreanWord: words.headword,
+        wordId: words.id,
+        headword: words.headword,
         homographNumber: words.homographNumber,
         categories: words.categories,
         translation: translations.translation,
@@ -143,11 +143,11 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
   ]);
 
   const content = results.map((r) => ({
-    cardId: r.cardId,
-    koreanWord: r.koreanWord,
+    wordId: r.wordId,
+    headword: r.headword,
     homographNumber: r.homographNumber,
     categories: r.categories,
-    foreignWords: r.translation ?? [],
+    translation: r.translation?.[0] ?? '',
   }));
 
   return { size: countResult?.count ?? 0, pageSize, page, content };

@@ -22,7 +22,7 @@ export default function CategoryPage() {
     queryKey: ['cards', category, locale],
     queryFn: async ({ pageParam = 1 }) => {
       const cards = await getCardsFromDeck(locale as Locale, category as Category, pageParam);
-      console.log(cards.content.map((c) => c.koreanWord));
+      console.log(cards.content.map((c) => c.headword));
       return cards;
     },
     getNextPageParam: (lastPage) => {

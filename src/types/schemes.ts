@@ -1,4 +1,3 @@
-import { Category } from './Category';
 import { Locale } from './Locale';
 import { SnakeToCamelCase } from './typeTransform';
 import { Card as FSRSCard } from 'ts-fsrs';
@@ -12,63 +11,42 @@ export type Paginated<T> = {
   content: T[];
 };
 
-export interface Card {
+/** words + translations 조인. 동형어(headword + homographNumber) 단위. */
+export interface Word {
+  wordId: number;
+  headword: string;
+  homographNumber: number;
+  partOfSpeech: string | null;
+  isNative: boolean | null;
+  origin: string | null;
+  pronunciation: string | null;
+  frequency: number | null;
   categories: string[];
-  cardId: number;
-  koreanWord: string;
-  languageCode: Locale;
-  foreignWord: string;
+  examples: string[];
+  conjugation: string | null;
+  derivative: string | null;
+  translation: string;
+  definition: string;
 }
 
-export interface KoreanCard {
+/** 덱 목록용 요약. 동형어 단위. */
+export interface WordListItem {
+  wordId: number;
+  headword: string;
   homographNumber: number;
   categories: string[];
-  cardId: number;
-  koreanWord: string;
+  translation: string;
 }
 
-export interface KoreanCardDetail extends KoreanCard {
-  meanings: Array<{
-    foreignMeaning: string;
-    partsOfSpeech: string;
-    pronunciation: string;
-    languageCode: Locale;
-    originalLanguage: string;
-    foreignWord: string;
-    relatedWords: string;
-    inflection: string;
-    exampleUsage: string;
-  }>;
-}
-
-export interface KoreanCardWithForeignWords extends KoreanCard {
-  foreignWords: string[];
-}
-
-export type StudyInfo = {
+export type CardState = {
   [K in keyof FSRSCard as SnakeToCamelCase<K>]: FSRSCard[K];
 } & {
   lastRating?: Date;
 };
 
-export type StudyInfoDTO = Omit<
-  StudyInfo,
-  'due' | 'lastReview' | 'state' | 'elapsedDays' | 'learningSteps'
-> & {
-  due: string;
-  lastReview: string | null;
-  state: 'New' | 'Learning' | 'Review' | 'Relearning';
-};
-
-export interface UserCard {
-  koreanCard: KoreanCard;
-  studyInfo: StudyInfo;
-  userCardId: number;
-}
-
-export interface UserCardDTO {
-  koreanCard: KoreanCard;
-  studyInfo: StudyInfoDTO;
+export interface CardDetail {
+  word: Word;
+  fsrs: CardState;
   userCardId: number;
 }
 
@@ -94,8 +72,3 @@ export type UserOption = {
   languageCode: Locale;
 };
 
-export type TokenDTO = {
-  accessToken: string;
-  refreshToken: string;
-  isSetup: boolean;
-};
