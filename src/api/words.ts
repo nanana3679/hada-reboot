@@ -20,7 +20,7 @@ export const getWordDetail = async (wordId: number, lang: Locale = 'en') => {
 
   const homographs = await db
     .select({
-      cardId: words.id,
+      wordId: words.id,
       homographNumber: words.homographNumber,
       partOfSpeech: words.partOfSpeech,
       definition: words.definition,
@@ -30,28 +30,24 @@ export const getWordDetail = async (wordId: number, lang: Locale = 'en') => {
     .all();
 
   return {
-    cardId: word.id,
-    koreanWord: word.headword,
+    wordId: word.id,
+    headword: word.headword,
     homographNumber: word.homographNumber,
+    partOfSpeech: word.partOfSpeech ?? null,
+    isNative: word.isNative ?? null,
+    origin: word.origin ?? null,
+    pronunciation: word.pronunciation ?? null,
+    frequency: word.frequency ?? null,
     categories: word.categories,
-    definition: word.definition,
-    meanings: trans
-      ? {
-          foreignMeaning: trans.definition,
-          partsOfSpeech: word.partOfSpeech,
-          pronunciation: word.pronunciation ?? '',
-          languageCode: trans.langCode,
-          originalLanguage: word.origin ?? '',
-          foreignWord: trans.translation,
-          relatedWords: '',
-          inflection: word.conjugation ?? '',
-          exampleUsage: word.examples,
-        }
-      : null,
+    examples: word.examples,
+    conjugation: word.conjugation ?? null,
+    derivative: word.derivative ?? null,
+    translation: trans?.translation?.[0] ?? '',
+    definition: trans?.definition?.[0] ?? '',
     homographs: homographs
-      .filter((h) => h.cardId !== word.id)
+      .filter((h) => h.wordId !== word.id)
       .map((h) => ({
-        cardId: h.cardId,
+        wordId: h.wordId,
         homographNumber: h.homographNumber,
         partOfSpeech: h.partOfSpeech,
         definition: h.definition,
@@ -64,11 +60,11 @@ function escapeLikePattern(str: string): string {
 }
 
 interface SearchResult {
-  cardId: number;
-  koreanWord: string;
+  wordId: number;
+  headword: string;
   categories: string[];
   languageCode: string;
-  foreignWord: string;
+  translation: string;
 }
 
 export const searchWords = async (
@@ -97,8 +93,8 @@ export const searchWords = async (
         .get(),
       db
         .select({
-          cardId: words.id,
-          koreanWord: words.headword,
+          wordId: words.id,
+          headword: words.headword,
           categories: words.categories,
           translation: translations.translation,
         })
@@ -119,11 +115,11 @@ export const searchWords = async (
       pageSize,
       page,
       content: results.map((r) => ({
-        cardId: r.cardId,
-        koreanWord: r.koreanWord,
+        wordId: r.wordId,
+        headword: r.headword,
         categories: r.categories,
         languageCode: lang,
-        foreignWord: r.translation?.[0] ?? '',
+        translation: r.translation?.[0] ?? '',
       })),
     };
   }
@@ -143,8 +139,8 @@ export const searchWords = async (
       .get(),
     db
       .select({
-        cardId: words.id,
-        koreanWord: words.headword,
+        wordId: words.id,
+        headword: words.headword,
         categories: words.categories,
         translation: translations.translation,
       })
@@ -162,11 +158,11 @@ export const searchWords = async (
     pageSize,
     page,
     content: results.map((r) => ({
-      cardId: r.cardId,
-      koreanWord: r.koreanWord,
+      wordId: r.wordId,
+      headword: r.headword,
       categories: r.categories,
       languageCode: lang,
-      foreignWord: r.translation?.[0] ?? '',
+      translation: r.translation?.[0] ?? '',
     })),
   };
 };

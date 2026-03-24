@@ -1,5 +1,5 @@
-import { getKoreanCardDetail } from '@/api/cards';
-import { UserCard } from '@/types/schemes';
+import { getWord } from '@/api/cards';
+import { CardDetail } from '@/types/schemes';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 
 const CACHE_SIZE = 5;
 
-export const useCardDetailCache = (queue: readonly UserCard[]) => {
+export const useCardDetailCache = (queue: readonly CardDetail[]) => {
   const currentCard = queue[0];
 
   const {
@@ -16,13 +16,13 @@ export const useCardDetailCache = (queue: readonly UserCard[]) => {
     isPending: isCardDetailLoading,
     error: cardDetailError
   } = useQuery({
-    queryKey: ['cardDetail', currentCard?.koreanCard?.cardId],
+    queryKey: ['cardDetail', currentCard?.word?.wordId],
     queryFn: async () => {
       if (!currentCard) return null;
-      console.log('fetching cardDetail', currentCard.koreanCard.koreanWord);
-      return await getKoreanCardDetail(currentCard!.koreanCard.cardId);
+      console.log('fetching cardDetail', currentCard.word.headword);
+      return await getWord(currentCard!.word.wordId);
     },
-    enabled: !!currentCard?.koreanCard?.cardId,
+    enabled: !!currentCard?.word?.wordId,
     staleTime: Infinity
   });
 
@@ -32,17 +32,17 @@ export const useCardDetailCache = (queue: readonly UserCard[]) => {
     // 캐시 사이즈만큼 프리패치
     queue.slice(0, CACHE_SIZE).forEach((card) => {
       queryClient.prefetchQuery({
-        queryKey: ['cardDetail', card.koreanCard.cardId],
+        queryKey: ['cardDetail', card.word.wordId],
         queryFn: () => {
-          console.log('prefetching cardDetail', card.koreanCard.koreanWord);
+          console.log('prefetching cardDetail', card.word.headword);
           try {
-            return getKoreanCardDetail(card.koreanCard.cardId);
+            return getWord(card.word.wordId);
           } catch (error) {
             // 에러 발생시 쿼리 자신을 캐시에서 제거
             // prefetch에서 발생한 에러이므로 에러를 throw하지 않음
-            console.error('Prefetch failed for card:', card.koreanCard.koreanWord, error);
+            console.error('Prefetch failed for card:', card.word.headword, error);
             queryClient.removeQueries({
-              queryKey: ['cardDetail', card.koreanCard.cardId]
+              queryKey: ['cardDetail', card.word.wordId]
             });
           }
         },

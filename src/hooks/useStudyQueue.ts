@@ -5,10 +5,10 @@ import { StudyService } from '@/lib/StudyService';
 import { Rating } from 'ts-fsrs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { UserCard } from '@/types/schemes';
+import { CardDetail } from '@/types/schemes';
 
 export const useStudyQueue = (category: Category) => {
-  const [queue, setQueue] = useState<UserCard[]>([]);
+  const [queue, setQueue] = useState<CardDetail[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const { currentCardDetail, isCardDetailLoading, cardDetailError } = useCardDetailCache(queue);
 
@@ -42,7 +42,7 @@ export const useStudyQueue = (category: Category) => {
       return withStudyService(studyService, (service) => {
         const newCard = service.repeat(rating);
         setQueue([...service.queue]);
-        const response = postStudyInfo(newCard.userCardId, newCard.studyInfo);
+        const response = postStudyInfo(newCard.userCardId, newCard.fsrs);
         return response;
       });
     },

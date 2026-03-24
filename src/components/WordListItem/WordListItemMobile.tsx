@@ -7,11 +7,11 @@ import styles from './WordListItemMobile.module.scss';
 import { useRouter } from 'next/navigation';
 
 const WordListItemMobile = ({
-  KoreanWord,
-  ForeignWord,
+  headword,
+  translation,
   isExpanded,
   homographNumber,
-  cardId
+  wordId
 }: WordListItemProps) => {
   const [expanded, setExpanded] = useState(isExpanded || false);
   const router = useRouter();
@@ -22,7 +22,7 @@ const WordListItemMobile = ({
 
   const handleClick = () => {
     if (expanded) {
-      router.push(`/card/${cardId}`);
+      router.push(`/card/${wordId}`);
     } else {
       setExpanded(true);
     }
@@ -35,10 +35,10 @@ const WordListItemMobile = ({
       onClick={handleClick}
     >
       <div className={styles['korean-word']}>
-        {KoreanWord}
+        {headword}
         <span className={styles['homograph-number']}>{homographNumber}</span>
       </div>
-      {expanded && <div className={styles['foreign-word']}>{ForeignWord}</div>}
+      {expanded && <div className={styles['foreign-word']}>{translation}</div>}
     </OutlinedCard>
   );
 };

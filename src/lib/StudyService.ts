@@ -1,16 +1,16 @@
 import { createFSRS } from '@/utils/FSRS';
 
-import { UserCard } from '@/types/schemes';
+import { CardDetail } from '@/types/schemes';
 import { Grade, Rating, State } from 'ts-fsrs';
 import { STATE_MAP } from '@/constants/study';
 import { StateCounts } from '@/types/study';
 
 export class StudyService {
   private f = createFSRS();
-  private _queue: UserCard[] = [];
-  private backupQueue: UserCard[] = [];
+  private _queue: CardDetail[] = [];
+  private backupQueue: CardDetail[] = [];
 
-  constructor(initialQueue: UserCard[]) {
+  constructor(initialQueue: CardDetail[]) {
     this.queue = initialQueue.sort((a, b) => this.compareCards(a, b));
     console.log('initialQueue', this.queue);
   }
@@ -18,23 +18,23 @@ export class StudyService {
   public logQueue() {
     this.queue.forEach((c) =>
       console.log(
-        `${c.studyInfo.due < new Date() ? 'overdue\t' : 'not overdue\t'} ${c.koreanCard.koreanWord} ${STATE_MAP[c.studyInfo.state]}\t lastRating: ${
-          c.studyInfo.lastRating ?? 'null'
+        `${c.fsrs.due < new Date() ? 'overdue\t' : 'not overdue\t'} ${c.word.headword} ${STATE_MAP[c.fsrs.state]}\t lastRating: ${
+          c.fsrs.lastRating ?? 'null'
         }`
       )
     );
   }
 
-  public get queue(): readonly UserCard[] {
+  public get queue(): readonly CardDetail[] {
     return this._queue;
   }
 
-  private set queue(newQueue: UserCard[]) {
+  private set queue(newQueue: CardDetail[]) {
     this._queue = newQueue;
     this.logQueue();
   }
 
-  public updateQueue(newCard: UserCard): void {
+  public updateQueue(newCard: CardDetail): void {
     const index = this.queue.findIndex((c) => c.userCardId === newCard.userCardId);
     if (index !== -1) {
       const newQueue = [...this.queue];
@@ -58,27 +58,27 @@ export class StudyService {
     return (
       this.hasCards &&
       this.queue.every(
-        (card) => card.studyInfo.state === State.Review && card.studyInfo.due > new Date()
+        (card) => card.fsrs.state === State.Review && card.fsrs.due > new Date()
       )
     );
   }
 
   public get iPreview() {
-    return this.f.repeat(this.currentCard.studyInfo, new Date());
+    return this.f.repeat(this.currentCard.fsrs, new Date());
   }
 
   public get StateCounts() {
     const now = new Date();
     const reviewCounts = this.queue.filter(
-      (card) => card.studyInfo.state === State.Review && card.studyInfo.due >= now
+      (card) => card.fsrs.state === State.Review && card.fsrs.due >= now
     ).length;
     const learningCounts = this.queue.filter(
-      (card) => card.studyInfo.state === State.Learning || card.studyInfo.state === State.Relearning
+      (card) => card.fsrs.state === State.Learning || card.fsrs.state === State.Relearning
     ).length;
     const overdueCounts = this.queue.filter(
-      (card) => card.studyInfo.state === State.Review && card.studyInfo.due < now
+      (card) => card.fsrs.state === State.Review && card.fsrs.due < now
     ).length;
-    const newCounts = this.queue.filter((card) => card.studyInfo.state === State.New).length;
+    const newCounts = this.queue.filter((card) => card.fsrs.state === State.New).length;
 
     return {
       reviewCounts,
@@ -94,20 +94,20 @@ export class StudyService {
   }
 
   // sort를 위한 비교 함수
-  private compareCards(a: UserCard, b: UserCard) {
+  private compareCards(a: CardDetail, b: CardDetail) {
     // overDue 여부로 정렬
     const now = new Date();
-    const aIsOverdue = a.studyInfo.due < now;
-    const bIsOverdue = b.studyInfo.due < now;
+    const aIsOverdue = a.fsrs.due < now;
+    const bIsOverdue = b.fsrs.due < now;
     if (aIsOverdue !== bIsOverdue) return aIsOverdue ? -1 : 1;
 
     // state(New < Review < Learning = Relearning)로 정렬
-    const aState = this.stateFilter(a.studyInfo.state);
-    const bState = this.stateFilter(b.studyInfo.state);
+    const aState = this.stateFilter(a.fsrs.state);
+    const bState = this.stateFilter(b.fsrs.state);
     if (aState !== bState) return aState - bState;
 
     // lastRating(최근 평가 시간)로 정렬
-    return (a.studyInfo.lastRating ?? now).getTime() - (b.studyInfo.lastRating ?? now).getTime();
+    return (a.fsrs.lastRating ?? now).getTime() - (b.fsrs.lastRating ?? now).getTime();
   }
 
   public repeat(rating: Rating) {
@@ -116,12 +116,12 @@ export class StudyService {
     const newIPreview = this.iPreview;
     const newRecordLogItem = newIPreview[rating as Grade];
 
-    const newStudyInfo = {
+    const newFsrs = {
       ...newRecordLogItem.card,
       lastRating: new Date()
     };
 
-    const newCard = { ...this.currentCard, studyInfo: newStudyInfo };
+    const newCard = { ...this.currentCard, fsrs: newFsrs };
     this.updateQueue(newCard);
 
     return newCard;

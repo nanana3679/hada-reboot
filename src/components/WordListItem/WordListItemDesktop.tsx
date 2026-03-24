@@ -9,29 +9,29 @@ import { WordListItemProps } from './types';
 import { useRouter } from 'next/navigation';
 
 const WordListItemDesktop = ({
-  KoreanWord,
-  ForeignWord,
+  headword,
+  translation,
   isHideKorean,
   isHideForeign,
   homographNumber,
-  cardId
+  wordId
 }: WordListItemProps) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/card/${cardId}`);
+    router.push(`/card/${wordId}`);
   };
 
   return (
     <OutlinedCard className={styles.card} onClick={handleClick} style={{ minHeight: '56px' }}>
       <div className={styles.content}>
         <h3 className={styles['korean-word']}>
-          {isHideKorean ? '' : KoreanWord}
+          {isHideKorean ? '' : headword}
           <span className={styles['homograph-number']}>{homographNumber}</span>
         </h3>
         <div className={styles['right-container']}>
           <div className={styles.line}></div>
-          <h3 className={styles['foreign-word']}>{isHideForeign ? '' : ForeignWord}</h3>
+          <h3 className={styles['foreign-word']}>{isHideForeign ? '' : translation}</h3>
         </div>
       </div>
     </OutlinedCard>

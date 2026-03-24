@@ -6,11 +6,12 @@
 
 ### Word
 
-한국어 단어의 **사전 정보**. 불변 데이터.
+한국어 단어의 **사전 정보**. 동형어(headword + homographNumber) 단위. 불변 데이터.
 
-- headword (표제어), 품사, 발음, 뜻풀이, 예문, 활용형, 어원 등
+- headword (표제어), 품사, 발음, 예문, 활용형, 어원 등
 - DB: `words` 테이블
-- 하나의 Word는 여러 Translation을 가질 수 있음
+- `Word` — words + translations 조인. 사전 정보에 번역어(`translation`)와 외국어 정의(`definition`)를 포함. 둘 다 `string`
+- `WordListItem` — 덱 목록용 요약 (wordId, headword, homographNumber, categories, translation)
 
 ### Translation
 
@@ -18,13 +19,13 @@ Word의 **외국어 번역**. 언어별로 1:1.
 
 - 번역어, 외국어 정의
 - DB: `translations` 테이블 (word_id + lang_code 유니크)
+- 한국어 뜻풀이(`words.definition`)는 클라이언트 타입에서 제외. 번역된 definition만 사용
 
 ### Card
 
 Word를 **학습 단위**로 감싼 것. Word(학습의 대상) + Translation을 학습 가능한 형태로 포함한다.
 
-- `CardListItem` — 덱 목록용 (요약 + 번역어 배열)
-- `CardDetail` — 학습 화면용 (WordDetail + FSRS State). **클라이언트 전용 타입** (`schemes.ts`에서 정의)
+- `CardDetail` — 학습 화면용 (Word + FSRS State). **클라이언트 전용 타입** (`schemes.ts`에서 정의)
 - `UserCard` — **서버/DB 전용** (CardDetail + userId). Drizzle 스키마의 `userCards`가 이에 대응. 클라이언트에 내려줄 때는 `CardDetail`로 변환
 
 ### Card State (`CardState` / ts-fsrs `Card`)
@@ -34,7 +35,7 @@ ts-fsrs 라이브러리의 **학습 상태**. 사용자별 가변 데이터.
 - due, stability, difficulty, scheduled_days, reps, lapses, state, last_review
 - state: 0=New, 1=Learning, 2=Review, 3=Relearning
 - `CardState`는 ts-fsrs `Card`의 camelCase 래퍼 타입. `CardStateDTO`는 직렬화 버전
-- `CardDetail.state`로 접근
+- `CardDetail.fsrs`로 접근 (`.state.state` 중복을 피하기 위해 `fsrs`로 명명)
 - `schemes.ts`에서 정의. 다른 파일은 `import { CardState } from '@/types/schemes'`로 사용
 
 ### Deck
@@ -88,7 +89,7 @@ Category를 UI에서 그룹핑하기 위한 **프론트엔드 전용 상수**. D
 
 | 도메인 개념 | DB 테이블 | 코드 타입 | 변수/함수 접두사 |
 |------------|-----------|----------|----------------|
-| Word | `words` | 현재 `KoreanCard` → `WordSummary` 예정, `KoreanCardDetail` → `WordDetail` 예정 | `word`, `getWordDetail` |
+| Word | `words` + `translations` | `Word` (조인), `WordListItem` (목록 요약) | `word`, `getWord` |
 | Translation | `translations` | — | `trans`, `translation` |
 | Card State | `user_cards` | `CardState` (ts-fsrs `Card` 래퍼) | `card`, `userCard` |
 | Deck | — (집계) | `Deck` | `deck`, `getDecks` |
