@@ -18,7 +18,7 @@ import { getUserOption, postUserOption } from '@/api/option';
 
 import { UserOption } from '@/types/schemes';
 import { Locale } from '@/types/Locale';
-import { LANGUAGE_OPTIONS, UTC_OFFSET_OPTIONS, THEME_OPTIONS } from '@/utils/dummyData';
+import { LANGUAGE_OPTIONS, UTC_OFFSET_OPTIONS, THEME_OPTIONS } from '@/constants/options';
 
 import classNames from 'classnames';
 import styles from './SettingsPage.module.scss';

@@ -12,16 +12,18 @@
 - [ ] KV 캐싱 구현 (덱 집계)
 - [ ] level → topics 통합 반영 (스키마, mock, API)
 
-## refactor: API 클라이언트 구조 변경
+## refactor: API 클라이언트 구조 변경 (RFC-0008)
 
-- [ ] `src/services/` 삭제 (AuthInterceptor, AuthService, CookieService, HttpClient, ServerServiceFactory)
-- [ ] `src/api/*.ts` → 새 API Routes 호출로 전환
-- [ ] mock 파일 삭제 (`src/api/*.mock.ts`)
+- [x] `src/services/` 삭제 (이미 제거됨)
+- [x] `src/api/*.ts` → Server Action에서 D1 직접 접근으로 전환 (이미 완료)
+- [x] `src/app/api/` route.ts 삭제 — auth 제외, 나머지 이미 없음
+- [x] mock 파일 삭제 (`src/api/*.mock.ts`, `src/utils/dummyData.ts`)
+- [ ] FSRS 진입점 래퍼 작성 — ts-fsrs의 snake_case↔camelCase 변환을 래퍼에서 처리하여 `converter.ts` 제거
 
 ## refactor: 타입 개선
 
-- [ ] `src/types/schemes.ts` 새 API 응답 타입에 맞게 업데이트
-- [ ] `src/utils/converter.ts` 삭제 (API 응답 형식 통일로 불필요)
+- [x] `src/types/schemes.ts` 새 API 응답 타입에 맞게 업데이트
+- [ ] `src/utils/converter.ts` 삭제 (FSRS 래퍼 완성 후)
 
 ## feat: 인증
 
