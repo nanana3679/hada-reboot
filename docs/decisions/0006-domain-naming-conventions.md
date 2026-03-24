@@ -89,8 +89,8 @@ export const CATEGORY_GROUP = {
 | `Card` (schemes.ts) | 삭제 | Word + Translation을 담는 레거시 타입, 도메인의 Card와 혼동 |
 | `CategoryType` | 삭제 | `CATEGORY_GROUP` 상수로 대체 |
 | `StudyInfo` | `CardState` | ts-fsrs `Card`의 camelCase 래퍼. `StudyInfo`는 모호하므로 도메인 용어에 맞춰 변경 |
-| `StudyInfoDTO` | `CardStateDTO` | `CardState`의 직렬화 버전 |
-| `UserCardDTO` | `CardDetailDTO` | `CardDetail`의 직렬화 버전. `UserCard` → `CardDetail` 리네이밍에 맞춤 |
+| `StudyInfoDTO` | 삭제 | Server Action은 도메인 타입 직접 반환, DTO 불필요 (RFC-0009) |
+| `UserCardDTO` | 삭제 | 동일 사유 (RFC-0009) |
 
 ### D. 프로퍼티 리네이밍
 

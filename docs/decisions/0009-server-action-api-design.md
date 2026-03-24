@@ -133,18 +133,18 @@ export async function requireUserId(): Promise<string> {
 | 대상 | 파일 | 사유 |
 |------|------|------|
 | `StudyInfo` | `src/types/schemes.ts` | `CardState`로 리네이밍 (RFC-0006). ts-fsrs `Card`의 camelCase 래퍼로 유지 |
-| `StudyInfoDTO` | `src/types/schemes.ts` | `CardStateDTO`로 리네이밍. Server Action 직접 반환으로 전환 후 불필요하면 삭제 |
-| `UserCardDTO` | `src/types/schemes.ts` | `CardDetailDTO`로 리네이밍. 동일하게 불필요하면 삭제 |
+| `StudyInfoDTO` | `src/types/schemes.ts` | 삭제. Server Action은 도메인 타입을 직접 반환하므로 DTO 불필요 |
+| `UserCardDTO` | `src/types/schemes.ts` | 삭제. 동일 사유 |
 | `TokenDTO` | `src/types/schemes.ts` | JWT 인증 제거로 미사용 |
 | `SnakeToCamelCase` | `src/types/typeTransform.ts` | REST 변환용, 미사용 |
 | `toStudyInfo()` | `src/utils/converter.ts` | CardState 직접 매핑으로 불필요 |
 | `toUserCard()` | `src/utils/converter.ts` | CardDetail 직접 매핑으로 불필요 |
-| `toStudyInfoDTO()` | `src/utils/converter.ts` | CardStateDTO 리네이밍 후 불필요하면 삭제 |
+| `toStudyInfoDTO()` | `src/utils/converter.ts` | DTO 삭제로 불필요 |
 | `toKoreanCardDetail()` | `src/utils/converter.ts` | 더미 데이터 기반, 불필요 |
 | `STATE_MAP` | `src/constants/study.ts` | DTO state 문자열 변환용, 불필요 |
 | `STATE_MAP_REVERSE` | `src/constants/study.ts` | 동일 |
 | `DUMMY_KOR_CARD_DETAIL` | `src/utils/dummyData.ts` | `toKoreanCardDetail` 제거로 미사용 |
-| `DUMMY_STUDY_INFO_DTO` | `src/utils/dummyData.ts` | DTO 리네이밍/제거로 미사용 |
+| `DUMMY_STUDY_INFO_DTO` | `src/utils/dummyData.ts` | DTO 삭제로 미사용 |
 
 **StudyInfo → CardState 전략 (RFC-0006 참조):**
 

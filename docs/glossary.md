@@ -33,7 +33,7 @@ ts-fsrs 라이브러리의 **학습 상태**. 사용자별 가변 데이터.
 
 - due, stability, difficulty, scheduled_days, reps, lapses, state, last_review
 - state: 0=New, 1=Learning, 2=Review, 3=Relearning
-- `CardState`는 ts-fsrs `Card`의 camelCase 래퍼 타입. `CardStateDTO`는 직렬화 버전
+- `CardState`는 ts-fsrs `Card`의 camelCase 래퍼 타입. DTO는 Server Action 전환으로 삭제 (RFC-0009)
 - `CardDetail.state`로 접근
 - `schemes.ts`에서 정의. 다른 파일은 `import { CardState } from '@/types/schemes'`로 사용
 
