@@ -198,5 +198,9 @@
     "signOut": "ออกจากระบบ",
     "deleteAccount": "ลบบัญชี",
     "utcOffset": "เขตเวลา"
+  },
+
+  "decks": {
+    "title": "ชุดคำศัพท์"
   }
 }

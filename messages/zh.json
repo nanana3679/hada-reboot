@@ -198,5 +198,9 @@
     "signOut": "退出登录",
     "deleteAccount": "删除账户",
     "utcOffset": "时区"
+  },
+
+  "decks": {
+    "title": "卡组"
   }
 }

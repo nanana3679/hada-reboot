@@ -198,5 +198,9 @@
     "signOut": "サインアウト",
     "deleteAccount": "アカウントを削除",
     "utcOffset": "タイムゾーン"
+  },
+
+  "decks": {
+    "title": "デッキ"
   }
 }

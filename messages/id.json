@@ -198,5 +198,9 @@
     "signOut": "Keluar",
     "deleteAccount": "Hapus akun",
     "utcOffset": "Zona waktu"
+  },
+
+  "decks": {
+    "title": "Dek"
   }
 }

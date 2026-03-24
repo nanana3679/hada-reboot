@@ -198,5 +198,9 @@
     "signOut": "Гарах",
     "deleteAccount": "Бүртгэл устгах",
     "utcOffset": "Цагийн бүс"
+  },
+
+  "decks": {
+    "title": "Багц"
   }
 }

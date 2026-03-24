@@ -198,5 +198,9 @@
     "signOut": "Sign out",
     "deleteAccount": "Delete account",
     "utcOffset": "Time zone"
+  },
+
+  "decks": {
+    "title": "Decks"
   }
 }

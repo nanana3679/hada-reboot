@@ -198,5 +198,9 @@
     "signOut": "Se déconnecter",
     "deleteAccount": "Supprimer le compte",
     "utcOffset": "Fuseau horaire"
+  },
+
+  "decks": {
+    "title": "Paquets"
   }
 }

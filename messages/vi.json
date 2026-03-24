@@ -198,5 +198,9 @@
     "signOut": "Đăng xuất",
     "deleteAccount": "Xóa tài khoản",
     "utcOffset": "Múi giờ"
+  },
+
+  "decks": {
+    "title": "Bộ thẻ"
   }
 }

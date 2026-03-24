@@ -198,5 +198,9 @@
     "signOut": "Выйти",
     "deleteAccount": "Удалить аккаунт",
     "utcOffset": "Часовой пояс"
+  },
+
+  "decks": {
+    "title": "Колоды"
   }
 }

@@ -198,5 +198,9 @@
     "signOut": "Cerrar sesión",
     "deleteAccount": "Eliminar cuenta",
     "utcOffset": "Zona horaria"
+  },
+
+  "decks": {
+    "title": "Mazos"
   }
 }
