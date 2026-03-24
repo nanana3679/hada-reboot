@@ -142,7 +142,7 @@ export default function LearningPage() {
       </div>
       <LearningCardSlider direction={direction} index={index}>
         <LearningCard
-          card={currentCardDetail}
+          card={currentCardDetail.word}
           className={styles['learning-card']}
           cardState={cardState}
           handleReveal={handleReveal}
