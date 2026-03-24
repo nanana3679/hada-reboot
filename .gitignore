@@ -56,3 +56,6 @@ next-env.d.ts
 
 # Generated SQL seeds
 scripts/seed-*.sql
+
+# test pages
+src/app/**/test-error/
