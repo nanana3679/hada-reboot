@@ -5,6 +5,8 @@ import { getDb } from '@/db';
 import { userOptions } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { getAuth } from '@/auth';
+import { cookies } from 'next/headers';
+import { Locale } from '@/types/Locale';
 
 async function getUserId(): Promise<string | null> {
   const { auth } = await getAuth();
@@ -78,4 +80,23 @@ export const postUserOption = async (userOption: UserOption): Promise<UserOption
     .run();
 
   return getUserOption();
+};
+
+export const initUserOption = async (languageCode: Locale, utcOffset: number): Promise<void> => {
+  const exists = await hasUserOption();
+
+  if (!exists) {
+    await postUserOption({
+      languageCode,
+      utcOffset,
+      dailyReviewWords: 20,
+      dailyStudyWords: 10,
+    });
+  }
+
+  (await cookies()).set('has-options', '1', {
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
+  });
 };
