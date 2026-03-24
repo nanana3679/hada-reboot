@@ -24,7 +24,7 @@
 
   "menu": {
     "difficulty": "Difficulté",
-    "meaning": "Signification",
+    "topic": "Sujet",
     "settings": "Paramètres",
     "guest": "Invité"
   },

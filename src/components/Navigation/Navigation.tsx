@@ -18,7 +18,7 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   const destinations = [
     { icon: 'folder', label: 'difficulty' },
-    { icon: 'folder', label: 'meaning' },
+    { icon: 'folder', label: 'topic' },
     isLoggedIn === false
       ? { icon: 'account_circle', label: 'guest' }
       : { icon: 'settings', label: 'settings' }
@@ -32,8 +32,10 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const handleDestination = (label: string) => {
     if (label === 'guest') {
       router.push('/login');
+    } else if (label === 'settings') {
+      router.push('/settings');
     } else {
-      router.push(`/${label}`);
+      router.push(`/decks?filter=${label}`);
     }
   };
 

@@ -1,18 +1,21 @@
-// app/[locale]/difficulty/ClientPage.tsx
+// app/[locale]/decks/ClientPage.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import DeckListPage from '@/components/common/DeckListPage';
 import { getDecks } from '@/api/decks';
 import { Deck } from '@/types/schemes';
 import CustomDialog from '@/components/Dialogs/CustomDialog';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
-import { useParams } from 'next/navigation';
+import { CATEGORY_GROUP, CategoryGroupKey } from '@/types/Category';
 
-export default function CategoryTypeClientPage({ isLoggedIn }: { isLoggedIn: boolean }) {
+export default function DecksClientPage({ isLoggedIn }: { isLoggedIn: boolean }) {
   const t = useTranslations();
-  const params = useParams();
+  const searchParams = useSearchParams();
+  const filter = searchParams?.get('filter') as CategoryGroupKey | null;
+
   const [decks, setDecks] = useState<Deck[]>();
   const [isCookieConsentOpen, setIsCookieConsentOpen] = useState(false);
 
@@ -31,20 +34,27 @@ export default function CategoryTypeClientPage({ isLoggedIn }: { isLoggedIn: boo
     }
   }, [isLoggedIn]);
 
+  const filteredDecks = useMemo(() => {
+    if (!decks) return undefined;
+    if (!filter || !(filter in CATEGORY_GROUP)) return decks;
+    const allowed = CATEGORY_GROUP[filter] as readonly string[];
+    return decks.filter((d) => allowed.includes(d.category));
+  }, [decks, filter]);
+
   const handleCookieConsent = () => {
     localStorage.setItem('cookieConsent', 'true');
     setIsCookieConsentOpen(false);
   };
 
-  if (!decks) {
+  if (!filteredDecks) {
     return <LoadingSpinner />;
   }
 
   return (
     <>
       <DeckListPage
-        decks={decks}
-        displayOrder={decks.map((d) => d.category)}
+        decks={filteredDecks}
+        displayOrder={filteredDecks.map((d) => d.category)}
       />
       <CustomDialog
         open={isCookieConsentOpen}

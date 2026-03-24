@@ -1,11 +1,11 @@
 import React from 'react';
 import { getAuth } from '@/auth';
-import CategoryTypeClientPage from './clientPage';
+import DecksClientPage from './clientPage';
 
-export default async function CategoryTypePage() {
+export default async function DecksPage() {
   const { auth } = await getAuth();
   const session = await auth();
   const isLoggedIn = !!session;
 
-  return <CategoryTypeClientPage isLoggedIn={isLoggedIn} />;
+  return <DecksClientPage isLoggedIn={isLoggedIn} />;
 }
