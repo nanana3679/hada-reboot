@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/i18n/routing';
 import NavigationRail from './NavigationRail';
 import TopAppBar from '@/components/Navigation/TopAppBar';
 import NavigationBar from './NavigationBar';
@@ -68,7 +68,7 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         />
       </div>
       <div className={styles['desktop-view']}>
-        <NavigationRail destinations={destinations} isMenuEnabled initialDestination="Difficulty" />
+        <NavigationRail destinations={destinations} isMenuEnabled initialDestination="Difficulty" handleDestinationClick={handleDestination} />
       </div>
     </>
   );

@@ -2,7 +2,6 @@ import Navigation from '@/components/Navigation/Navigation';
 import { SnackbarProvider } from '@/components/Snackbar/SnackbarProvider';
 
 import I18nProvider from '@/providers/I18nProvider';
-import { StoreProvider } from '@/providers/StoreProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
 import ErrorBoundaryWrapper from '@/providers/ErrorBoundaryWrapper';
 
@@ -23,19 +22,17 @@ const NavigationLayout = async ({ children, params }: { children: React.ReactNod
 
   return (
     <ErrorBoundaryWrapper>
-      <StoreProvider>
-        <QueryProvider>
-          <div className={styles['navigation-layout']}>
-            <I18nProvider>
-              <SnackbarProvider>
-                <Navigation isLoggedIn={isLoggedIn} />
-                {needsOptionInit && <UserOptionInitializer locale={locale} />}
-                {children}
-              </SnackbarProvider>
-            </I18nProvider>
-          </div>
-        </QueryProvider>
-      </StoreProvider>
+      <QueryProvider>
+        <div className={styles['navigation-layout']}>
+          <I18nProvider>
+            <SnackbarProvider>
+              <Navigation isLoggedIn={isLoggedIn} />
+              {needsOptionInit && <UserOptionInitializer locale={locale} />}
+              {children}
+            </SnackbarProvider>
+          </I18nProvider>
+        </div>
+      </QueryProvider>
     </ErrorBoundaryWrapper>
   );
 };

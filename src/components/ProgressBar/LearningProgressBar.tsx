@@ -6,29 +6,29 @@ import { ProgressBarSegment } from '@/types/ProgressBarSegment';
 import { LEARNING_PROGRESS_BAR_COLORS } from '@/constants/colors';
 import { StateCounts } from '@/types/study';
 
-const LearningProgressBar = ({ StateCounts }: { StateCounts: StateCounts; className: string }) => {
+const LearningProgressBar = ({ stateCounts }: { stateCounts: StateCounts }) => {
   const progressBarSegments: ProgressBarSegment[] = [
     {
-      value: StateCounts.reviewCounts,
-      label: StateCounts.reviewCounts,
+      value: stateCounts.reviewCounts,
+      label: stateCounts.reviewCounts,
       tooltip: 'Completed',
       color: LEARNING_PROGRESS_BAR_COLORS.Review
     },
     {
-      value: StateCounts.overdueCounts,
-      label: StateCounts.overdueCounts,
+      value: stateCounts.overdueCounts,
+      label: stateCounts.overdueCounts,
       tooltip: 'Review',
       color: LEARNING_PROGRESS_BAR_COLORS.Overdue
     },
     {
-      value: StateCounts.newCounts,
-      label: StateCounts.newCounts,
+      value: stateCounts.newCounts,
+      label: stateCounts.newCounts,
       tooltip: 'New',
       color: LEARNING_PROGRESS_BAR_COLORS.New
     },
     {
-      value: StateCounts.learningCounts,
-      label: StateCounts.learningCounts,
+      value: stateCounts.learningCounts,
+      label: stateCounts.learningCounts,
       tooltip: 'Learning',
       color: LEARNING_PROGRESS_BAR_COLORS.Learning
     }

@@ -36,7 +36,7 @@ export default function LearningPage() {
     currentCardDetail,
     isLoading,
     repeat,
-    StateCounts,
+    stateCounts,
     iPreview,
     isCompleted,
     error,
@@ -137,12 +137,12 @@ export default function LearningPage() {
     <motion.div className={styles['learning-container']} layout>
       <div className={styles['progress-container-wrapper']}>
         <div className={styles['progress-container']}>
-          <LearningProgressBar className={styles['progress-bar']} StateCounts={StateCounts} />
+          <LearningProgressBar stateCounts={stateCounts} />
         </div>
       </div>
       <LearningCardSlider direction={direction} index={index}>
         <LearningCard
-          card={currentCardDetail}
+          card={currentCardDetail.word}
           className={styles['learning-card']}
           cardState={cardState}
           handleReveal={handleReveal}

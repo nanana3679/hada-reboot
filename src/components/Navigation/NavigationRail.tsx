@@ -12,11 +12,13 @@ import { useWindowSize } from '@/hooks/useWindowSize';
 const NavigationRail = ({
   destinations,
   isMenuEnabled,
-  initialDestination
+  initialDestination,
+  handleDestinationClick
 }: {
   destinations: { icon: string; label: string }[];
   isMenuEnabled: boolean;
   initialDestination: string;
+  handleDestinationClick?: (label: string) => void;
 }) => {
   const t = useTranslations();
 
@@ -24,8 +26,9 @@ const NavigationRail = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const { width } = useWindowSize();
 
-  const handleDestinationClick = (destination: string) => {
+  const handleClick = (destination: string) => {
     setSelectedDestination(destination);
+    handleDestinationClick?.(destination);
   };
 
   const handleExpand = () => {
@@ -62,7 +65,7 @@ const NavigationRail = ({
                 styles['navigation-item'],
                 selectedDestination === destination.label && styles['selected']
               )}
-              onClick={() => handleDestinationClick(destination.label)}
+              onClick={() => handleClick(destination.label)}
             >
               <button className={styles['navigation-item-button']}>
                 <motion.div

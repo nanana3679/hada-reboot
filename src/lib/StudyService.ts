@@ -43,6 +43,13 @@ export class StudyService {
     }
   }
 
+  public updateUserCardId(wordId: number, userCardId: number): void {
+    const card = this._queue.find((c) => c.word.wordId === wordId && c.userCardId === null);
+    if (card) {
+      card.userCardId = userCardId;
+    }
+  }
+
   public get hasCards() {
     return this.queue.length > 0;
   }
@@ -67,7 +74,7 @@ export class StudyService {
     return this.f.repeat(this.currentCard.fsrs, new Date());
   }
 
-  public get StateCounts() {
+  public get stateCounts() {
     const now = new Date();
     const reviewCounts = this.queue.filter(
       (card) => card.fsrs.state === State.Review && card.fsrs.due >= now
