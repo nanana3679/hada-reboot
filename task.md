@@ -12,7 +12,7 @@
 - [x] KV 캐싱 구현 (덱 집계)
 - [x] level → topics 통합 반영 (스키마, mock, API)
 - [x] topics → categories 리네이밍 (RFC-0006)
-- [ ] WordDetail KV 캐싱 — 언어별로 word+translation join 결과를 KV에 캐싱하여 CardDetail.word를 요약→상세(WordDetail)로 확장
+- [ ] Word KV 캐싱 — 언어별로 words+translations join 결과를 KV에 캐싱하여 학습 카드 로드 최적화
 
 ## refactor: API 클라이언트 구조 변경
 
@@ -22,8 +22,8 @@
 
 ## refactor: 타입 개선
 
-- [ ] `src/types/schemes.ts` 새 API 응답 타입에 맞게 업데이트
-- [ ] `src/utils/converter.ts` 삭제 (API 응답 형식 통일로 불필요)
+- [x] `src/types/schemes.ts` 새 API 응답 타입에 맞게 업데이트
+- [x] `src/utils/converter.ts` 삭제 (API 응답 형식 통일로 불필요)
 
 ## feat: 인증
 

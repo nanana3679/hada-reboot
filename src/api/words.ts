@@ -94,7 +94,7 @@ export const searchWords = async (
       db
         .select({
           wordId: words.id,
-          word: words.headword,
+          headword: words.headword,
           categories: words.categories,
           translation: translations.translation,
         })
@@ -116,7 +116,7 @@ export const searchWords = async (
       page,
       content: results.map((r) => ({
         wordId: r.wordId,
-        headword: r.word,
+        headword: r.headword,
         categories: r.categories,
         languageCode: lang,
         translation: r.translation?.[0] ?? '',
@@ -140,7 +140,7 @@ export const searchWords = async (
     db
       .select({
         wordId: words.id,
-        word: words.headword,
+        headword: words.headword,
         categories: words.categories,
         translation: translations.translation,
       })
@@ -159,7 +159,7 @@ export const searchWords = async (
     page,
     content: results.map((r) => ({
       wordId: r.wordId,
-      headword: r.word,
+      headword: r.headword,
       categories: r.categories,
       languageCode: lang,
       translation: r.translation?.[0] ?? '',

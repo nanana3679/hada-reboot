@@ -125,7 +125,7 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
     db
       .select({
         wordId: words.id,
-        word: words.headword,
+        headword: words.headword,
         homographNumber: words.homographNumber,
         categories: words.categories,
         translation: translations.translation,
@@ -144,7 +144,7 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
 
   const content = results.map((r) => ({
     wordId: r.wordId,
-    headword: r.word,
+    headword: r.headword,
     homographNumber: r.homographNumber,
     categories: r.categories,
     translation: r.translation?.[0] ?? '',
