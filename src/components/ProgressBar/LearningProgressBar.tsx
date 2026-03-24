@@ -6,7 +6,7 @@ import { ProgressBarSegment } from '@/types/ProgressBarSegment';
 import { LEARNING_PROGRESS_BAR_COLORS } from '@/constants/colors';
 import { StateCounts } from '@/types/study';
 
-const LearningProgressBar = ({ stateCounts }: { stateCounts: StateCounts; className: string }) => {
+const LearningProgressBar = ({ stateCounts }: { stateCounts: StateCounts }) => {
   const progressBarSegments: ProgressBarSegment[] = [
     {
       value: stateCounts.reviewCounts,

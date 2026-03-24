@@ -43,11 +43,11 @@ export const useStudyQueue = (category: Category) => {
       });
     },
     onError: (error) => {
-      withStudyService(studyService, (service) => {
-        service.revert();
+      if (studyService) {
+        studyService.revert();
         forceUpdate((n) => n + 1);
-        setError(error);
-      });
+      }
+      setError(error);
     }
   });
 

@@ -137,7 +137,7 @@ export default function LearningPage() {
     <motion.div className={styles['learning-container']} layout>
       <div className={styles['progress-container-wrapper']}>
         <div className={styles['progress-container']}>
-          <LearningProgressBar className={styles['progress-bar']} stateCounts={stateCounts} />
+          <LearningProgressBar stateCounts={stateCounts} />
         </div>
       </div>
       <LearningCardSlider direction={direction} index={index}>

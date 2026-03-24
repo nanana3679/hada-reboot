@@ -164,7 +164,7 @@ export const getCards = async (studyType: StudyType, category: Category, lang: L
   return { size: content.length, pageSize: dailyReviewWords, page: 1, content };
 };
 
-export const postFsrs = async (userCardId: number | null, wordId: number, cardState: CardState) => {
+export const postFsrs = async (userCardId: number | null, wordId: number, cardState: CardState): Promise<{ userCardId: number; fsrs: CardState }> => {
   const userId = await getUserId();
   if (!userId) {
     throw new Error('Not authenticated');
@@ -177,7 +177,7 @@ export const postFsrs = async (userCardId: number | null, wordId: number, cardSt
     : 0;
 
   if (userCardId === null) {
-    // New card — INSERT
+    // New card — INSERT (onConflictDoNothing으로 동시 요청 중복 방지)
     const result = await db
       .insert(userCards)
       .values({
@@ -194,8 +194,22 @@ export const postFsrs = async (userCardId: number | null, wordId: number, cardSt
         createdAt: now,
         updatedAt: now,
       })
+      .onConflictDoNothing()
       .returning({ id: userCards.id })
       .get();
+
+    if (!result) {
+      // 이미 존재 — 기존 레코드로 UPDATE
+      const existing = await db
+        .select({ id: userCards.id })
+        .from(userCards)
+        .where(and(eq(userCards.userId, userId), eq(userCards.wordId, wordId)))
+        .get();
+      if (existing) {
+        return postFsrs(existing.id, wordId, cardState);
+      }
+      throw new Error('Failed to create or find user card');
+    }
 
     await invalidateUserDeckCache(userId);
 
