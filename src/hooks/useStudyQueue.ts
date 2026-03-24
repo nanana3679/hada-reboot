@@ -59,7 +59,7 @@ export const useStudyQueue = (category: Category) => {
     overdueCounts: 0,
     newCounts: 0
   };
-  const iPreview = studyService?.iPreview ?? null;
+  const iPreview = studyService?.hasCards ? studyService.iPreview : null;
   const isCompleted = studyService?.isCompleted ?? false;
 
   const clearError = () => {
