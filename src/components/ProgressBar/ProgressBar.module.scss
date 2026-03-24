@@ -37,7 +37,7 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  color: var(--md-sys-color-secondary);
+  color: rgba(0, 0, 0, 0.7);
 
   @include tp.label-medium;
 }
