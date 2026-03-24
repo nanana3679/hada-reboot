@@ -3,10 +3,10 @@
 import { Locale } from '@/types/Locale';
 import { Category } from '@/types/Category';
 import { Paginated } from '@/types/schemes';
-import { Deck, KoreanCardWithForeignWords, UserStudyHistory } from '@/types/schemes';
+import { Deck, WordListItem, UserStudyHistory } from '@/types/schemes';
 import {
   DUMMY_DECKS,
-  DUMMY_KOR_CARD_WITH_FOREIGN_WORDS,
+  DUMMY_WORD_LIST_ITEM,
   DUMMY_USER_STUDY_HISTORIES,
   DUMMY_USER_STUDY_HISTORY
 } from '@/utils/dummyData';
@@ -22,10 +22,10 @@ export const getDecks = async () => {
 };
 
 export const getCardsFromDeck = async (locale: Locale, query: Category) => {
-  return new Promise<Paginated<KoreanCardWithForeignWords>>((resolve) => {
+  return new Promise<Paginated<WordListItem>>((resolve) => {
     setTimeout(() => {
       const data = {
-        content: [DUMMY_KOR_CARD_WITH_FOREIGN_WORDS],
+        content: [DUMMY_WORD_LIST_ITEM],
         page: 1,
         pageSize: 10,
         size: 1

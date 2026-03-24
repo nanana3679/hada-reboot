@@ -11,30 +11,31 @@ export type Paginated<T> = {
   content: T[];
 };
 
-export interface WordDetail {
+/** words + translations 조인. 동형어(headword + homographNumber) 단위. */
+export interface Word {
   wordId: number;
-  word: string;
+  headword: string;
   homographNumber: number;
+  partOfSpeech: string | null;
+  isNative: boolean | null;
+  origin: string | null;
+  pronunciation: string | null;
+  frequency: number | null;
   categories: string[];
-  meanings: Array<{
-    foreignMeaning: string;
-    partsOfSpeech: string;
-    pronunciation: string;
-    languageCode: Locale;
-    originalLanguage: string;
-    foreignWord: string;
-    relatedWords: string;
-    inflection: string;
-    exampleUsage: string;
-  }>;
+  examples: string[];
+  conjugation: string | null;
+  derivative: string | null;
+  translation: string;
+  definition: string;
 }
 
+/** 덱 목록용 요약. 동형어 단위. */
 export interface WordListItem {
   wordId: number;
-  word: string;
+  headword: string;
   homographNumber: number;
   categories: string[];
-  foreignWords: string[];
+  translation: string;
 }
 
 export type CardState = {
@@ -44,14 +45,8 @@ export type CardState = {
 };
 
 export interface CardDetail {
-  /** WordDetail KV 캐싱 구현 후 WordDetail로 확장 예정 */
-  word: {
-    wordId: number;
-    word: string;
-    homographNumber: number;
-    categories: string[];
-  };
-  state: CardState;
+  word: Word;
+  fsrs: CardState;
   userCardId: number;
 }
 

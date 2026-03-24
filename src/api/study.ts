@@ -1,15 +1,14 @@
 'use server';
 
-import { Paginated, StudyType, StudyInfo, StudyInfoDTO, UserCardDTO } from '@/types/schemes';
+import { StudyType, CardState, CardDetail } from '@/types/schemes';
 import { Category } from '@/types/Category';
-import { toStudyInfo, toUserCard } from '@/utils/converter';
+import { Locale } from '@/types/Locale';
 import { getDb } from '@/db';
-import { words, userCards } from '@/db/schema';
+import { words, userCards, translations } from '@/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { invalidateUserDeckCache } from '@/lib/cache';
 import { getAuth } from '@/auth';
-
-const STATE_NAMES = ['New', 'Learning', 'Review', 'Relearning'] as const;
+import { dateDiffInDays } from 'ts-fsrs';
 
 async function getUserId(): Promise<string | null> {
   const { auth } = await getAuth();
@@ -17,7 +16,7 @@ async function getUserId(): Promise<string | null> {
   return session?.user?.id ?? null;
 }
 
-export const getLearningCards = async (studyType: StudyType, category: Category) => {
+export const getLearningCards = async (studyType: StudyType, category: Category, lang: Locale = 'en') => {
   const userId = await getUserId();
   if (!userId) {
     return { size: 0, pageSize: 100, page: 1, content: [] };
@@ -37,10 +36,20 @@ export const getLearningCards = async (studyType: StudyType, category: Category)
   const results = await db
     .select({
       userCardId: userCards.id,
-      cardId: words.id,
-      koreanWord: words.headword,
+      wordId: words.id,
+      headword: words.headword,
       homographNumber: words.homographNumber,
+      partOfSpeech: words.partOfSpeech,
+      isNative: words.isNative,
+      origin: words.origin,
+      pronunciation: words.pronunciation,
+      frequency: words.frequency,
       categories: words.categories,
+      examples: words.examples,
+      conjugation: words.conjugation,
+      derivative: words.derivative,
+      translation: translations.translation,
+      transDefinition: translations.definition,
       due: userCards.due,
       stability: userCards.stability,
       difficulty: userCards.difficulty,
@@ -52,34 +61,46 @@ export const getLearningCards = async (studyType: StudyType, category: Category)
     })
     .from(userCards)
     .innerJoin(words, eq(userCards.wordId, words.id))
+    .leftJoin(translations, and(eq(translations.wordId, words.id), eq(translations.langCode, lang)))
     .where(and(eq(userCards.userId, userId), stateCondition, categoryCondition))
     .all();
 
-  const content: UserCardDTO[] = results.map((r) => ({
+  const content: CardDetail[] = results.map((r) => ({
     userCardId: r.userCardId,
-    koreanCard: {
-      cardId: r.cardId,
-      koreanWord: r.koreanWord,
+    word: {
+      wordId: r.wordId,
+      headword: r.headword,
       homographNumber: r.homographNumber,
+      partOfSpeech: r.partOfSpeech ?? null,
+      isNative: r.isNative ?? null,
+      origin: r.origin ?? null,
+      pronunciation: r.pronunciation ?? null,
+      frequency: r.frequency ?? null,
       categories: r.categories,
+      examples: r.examples,
+      conjugation: r.conjugation ?? null,
+      derivative: r.derivative ?? null,
+      translation: r.translation?.[0] ?? '',
+      definition: r.transDefinition?.[0] ?? '',
     },
-    studyInfo: {
-      due: r.due,
+    fsrs: {
+      due: new Date(r.due),
       stability: r.stability,
       difficulty: r.difficulty,
+      elapsedDays: r.lastReview ? dateDiffInDays(new Date(r.lastReview), new Date()) : 0,
       scheduledDays: r.scheduledDays,
       reps: r.reps,
       lapses: r.lapses,
-      state: (STATE_NAMES[r.state] ?? 'New') as StudyInfoDTO['state'],
-      lastReview: r.lastReview,
-    },
+      learningSteps: 0,
+      state: r.state,
+      lastReview: r.lastReview ? new Date(r.lastReview) : undefined,
+    } as CardState,
   }));
 
-  const convertedData = content.map((card) => toUserCard(card));
-  return { size: convertedData.length, pageSize: 100, page: 1, content: convertedData } as Paginated<ReturnType<typeof toUserCard>>;
+  return { size: content.length, pageSize: 100, page: 1, content };
 };
 
-export const postStudyInfo = async (userCardId: number, studyInfo: StudyInfo) => {
+export const postStudyInfo = async (userCardId: number, cardState: CardState) => {
   const userId = await getUserId();
   if (!userId) {
     throw new Error('Not authenticated');
@@ -93,22 +114,22 @@ export const postStudyInfo = async (userCardId: number, studyInfo: StudyInfo) =>
     throw new Error('UserCard not found');
   }
 
-  const stateValue = (studyInfo.state >= 0 && studyInfo.state < STATE_NAMES.length)
-    ? studyInfo.state
+  const stateValue = (cardState.state >= 0 && cardState.state <= 3)
+    ? cardState.state
     : card.state;
   const now = new Date().toISOString();
 
   await db
     .update(userCards)
     .set({
-      due: studyInfo.due.toISOString(),
-      stability: studyInfo.stability,
-      difficulty: studyInfo.difficulty,
-      scheduledDays: studyInfo.scheduledDays,
-      reps: studyInfo.reps,
-      lapses: studyInfo.lapses,
+      due: cardState.due.toISOString(),
+      stability: cardState.stability,
+      difficulty: cardState.difficulty,
+      scheduledDays: cardState.scheduledDays,
+      reps: cardState.reps,
+      lapses: cardState.lapses,
       state: stateValue,
-      lastReview: studyInfo.lastReview?.toISOString() ?? now,
+      lastReview: cardState.lastReview?.toISOString() ?? now,
       updatedAt: now,
     })
     .where(ownerCondition)
@@ -121,16 +142,16 @@ export const postStudyInfo = async (userCardId: number, studyInfo: StudyInfo) =>
     throw new Error('Failed to retrieve updated card');
   }
 
-  const dto: StudyInfoDTO = {
-    due: updated.due,
+  return {
+    due: new Date(updated.due),
     stability: updated.stability,
     difficulty: updated.difficulty,
+    elapsedDays: updated.lastReview ? dateDiffInDays(new Date(updated.lastReview), new Date()) : 0,
     scheduledDays: updated.scheduledDays,
     reps: updated.reps,
     lapses: updated.lapses,
-    state: STATE_NAMES[updated.state] ?? 'New',
-    lastReview: updated.lastReview,
-  };
-
-  return toStudyInfo(dto);
+    learningSteps: 0,
+    state: updated.state,
+    lastReview: updated.lastReview ? new Date(updated.lastReview) : undefined,
+  } as CardState;
 };

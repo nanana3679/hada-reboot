@@ -10,7 +10,7 @@ import { Icon, IconButton } from '@/components/material-components/IconButton/Ic
 import { Menu, MenuItem } from '@/components/material-components/Menu';
 import WordListItemDesktop from '@/components/WordListItem/WordListItemDesktop';
 import WordListItemMobile from '@/components/WordListItem/WordListItemMobile';
-import { KoreanCardWithForeignWords } from '@/types/schemes';
+import { WordListItem } from '@/types/schemes';
 import styles from './WordListPage.module.scss';
 import { isDifficulty } from '@/types/Category';
 import { SpinnerCircular } from 'spinners-react';
@@ -22,7 +22,7 @@ export default function WordListPage({
   isLoading,
   hasMore
 }: {
-  wordList: KoreanCardWithForeignWords[];
+  wordList: WordListItem[];
   category: string;
   onLoadMore: () => void;
   isLoading: boolean;
@@ -135,13 +135,13 @@ export default function WordListPage({
           {wordList.map((word, index) => (
             <WordListItem
               key={index}
-              KoreanWord={word.koreanWord}
-              ForeignWord={word.foreignWords[0]}
+              headword={word.headword}
+              translation={word.translation}
               homographNumber={+word.homographNumber + 1}
               isExpanded={!isLarge && isExpanded}
               isHideKorean={isLarge && isHideKorean}
               isHideForeign={isLarge && isHideForeign}
-              cardId={word.cardId}
+              wordId={word.wordId}
             />
           ))}
 
