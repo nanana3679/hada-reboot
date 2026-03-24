@@ -31,11 +31,15 @@ export const useStudyQueue = (category: Category) => {
 
   const repeatMutation = useMutation({
     mutationFn: async ({ rating }: { rating: Rating }) => {
-      return withStudyService(studyService, (service) => {
+      return withStudyService(studyService, async (service) => {
         const newCard = service.repeat(rating);
         forceUpdate((n) => n + 1);
-        const response = postStudyInfo(newCard.userCardId, newCard.fsrs);
-        return response;
+        const result = await postStudyInfo(newCard.userCardId, newCard.word.wordId, newCard.fsrs);
+        // New 카드 INSERT 후 userCardId 갱신
+        if (newCard.userCardId === null && result.userCardId) {
+          service.updateUserCardId(newCard.word.wordId, result.userCardId);
+        }
+        return result;
       });
     },
     onError: (error) => {

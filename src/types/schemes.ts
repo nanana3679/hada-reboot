@@ -47,7 +47,7 @@ export type CardState = {
 export interface CardDetail {
   word: Word;
   fsrs: CardState;
-  userCardId: number;
+  userCardId: number | null;
 }
 
 export interface Deck {
