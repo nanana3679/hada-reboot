@@ -25,7 +25,7 @@ export const getKoreanCardDetail = async (
     cardId: word.id,
     koreanWord: word.headword,
     homographNumber: word.homographNumber,
-    topics: word.topics,
+    categories: word.categories,
     meanings: trans
       ? [
           {

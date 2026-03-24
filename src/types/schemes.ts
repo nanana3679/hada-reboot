@@ -13,7 +13,7 @@ export type Paginated<T> = {
 };
 
 export interface Card {
-  topics: string[];
+  categories: string[];
   cardId: number;
   koreanWord: string;
   languageCode: Locale;
@@ -22,7 +22,7 @@ export interface Card {
 
 export interface KoreanCard {
   homographNumber: number;
-  topics: string[];
+  categories: string[];
   cardId: number;
   koreanWord: string;
 }

@@ -33,7 +33,7 @@ export const getWordDetail = async (wordId: number, lang: Locale = 'en') => {
     cardId: word.id,
     koreanWord: word.headword,
     homographNumber: word.homographNumber,
-    topics: word.topics,
+    categories: word.categories,
     definition: word.definition,
     meanings: trans
       ? {
@@ -66,7 +66,7 @@ function escapeLikePattern(str: string): string {
 interface SearchResult {
   cardId: number;
   koreanWord: string;
-  topics: string[];
+  categories: string[];
   languageCode: string;
   foreignWord: string;
 }
@@ -99,7 +99,7 @@ export const searchWords = async (
         .select({
           cardId: words.id,
           koreanWord: words.headword,
-          topics: words.topics,
+          categories: words.categories,
           translation: translations.translation,
         })
         .from(words)
@@ -121,7 +121,7 @@ export const searchWords = async (
       content: results.map((r) => ({
         cardId: r.cardId,
         koreanWord: r.koreanWord,
-        topics: r.topics,
+        categories: r.categories,
         languageCode: lang,
         foreignWord: r.translation?.[0] ?? '',
       })),
@@ -145,7 +145,7 @@ export const searchWords = async (
       .select({
         cardId: words.id,
         koreanWord: words.headword,
-        topics: words.topics,
+        categories: words.categories,
         translation: translations.translation,
       })
       .from(translations)
@@ -164,7 +164,7 @@ export const searchWords = async (
     content: results.map((r) => ({
       cardId: r.cardId,
       koreanWord: r.koreanWord,
-      topics: r.topics,
+      categories: r.categories,
       languageCode: lang,
       foreignWord: r.translation?.[0] ?? '',
     })),

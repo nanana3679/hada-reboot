@@ -14,7 +14,7 @@ interface WordSectionProps {
 }
 
 const WordSection = ({ card }: WordSectionProps) => {
-  const difficultyTopic = card.topics.find((t) => t in difficultyStars);
+  const difficultyTopic = card.categories.find((t) => t in difficultyStars);
   const levelLabel = difficultyTopic ? difficultyStars[difficultyTopic] : '';
 
   return (
