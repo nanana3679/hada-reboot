@@ -11,7 +11,7 @@ function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PATHS.some((path) => segments.includes(path.slice(1)));
 }
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   if (isProtectedPath(request.nextUrl.pathname)) {
     const sessionToken =
       request.cookies.get('authjs.session-token') ??
