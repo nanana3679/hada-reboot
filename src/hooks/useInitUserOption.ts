@@ -21,7 +21,7 @@ export function useInitUserOption(locale: string) {
     initialized.current = true;
 
     initUserOption(locale as Locale, detectUtcOffset()).catch(() => {
-      if (REQUIRE_OPTIONS_ROUTES.some((route) => pathname.includes(route))) {
+      if (pathname && REQUIRE_OPTIONS_ROUTES.some((route) => pathname.includes(route))) {
         setError(new Error('SETUP_REQUIRED'));
       }
     });

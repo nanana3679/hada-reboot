@@ -21,11 +21,11 @@
 
 @mixin apply-typescale($typescale, $prominent: false) {
   $values: tokens.md-sys-typescale-values();
-  font-weight: if(
-    $prominent,
-    map.get($values, '#{$typescale}-weight-prominent'),
-    map.get($values, '#{$typescale}-weight')
-  );
+  @if $prominent {
+    font-weight: map.get($values, '#{$typescale}-weight-prominent');
+  } @else {
+    font-weight: map.get($values, '#{$typescale}-weight');
+  }
 
   font-size: map.get($values, '#{$typescale}-size');
   line-height: map.get($values, '#{$typescale}-line-height');
