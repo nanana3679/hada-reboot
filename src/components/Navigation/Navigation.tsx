@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from '@/i18n/routing';
+import { useSearchParams } from 'next/navigation';
 import NavigationRail from './NavigationRail';
 import TopAppBar from '@/components/Navigation/TopAppBar';
 import NavigationBar from './NavigationBar';
@@ -11,10 +12,15 @@ import styles from './Navigation.module.scss';
 const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const isLoginPage = pathname?.includes('/login');
 
   if (isLoginPage) return null;
+
+  const activeDestination = pathname?.includes('/settings')
+    ? 'settings'
+    : searchParams?.get('filter') ?? 'difficulty';
 
   const destinations = [
     { icon: 'folder', label: 'difficulty' },
@@ -65,12 +71,12 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         />
         <NavigationBar
           destinations={destinations}
-          initialDestination="Difficulty"
+          initialDestination={activeDestination}
           handleDestinationClick={handleDestination}
         />
       </div>
       <div className={styles['desktop-view']}>
-        <NavigationRail destinations={destinations} isMenuEnabled initialDestination="Difficulty" handleDestinationClick={handleDestination} />
+        <NavigationRail destinations={destinations} isMenuEnabled initialDestination={activeDestination} handleDestinationClick={handleDestination} />
       </div>
     </>
   );
