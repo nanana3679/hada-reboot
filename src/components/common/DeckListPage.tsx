@@ -37,7 +37,9 @@ export default function DeckListPage({
     [t]
   );
 
-  const handleLearn = (isCompleted: boolean) => setIsDialogOpen(isCompleted);
+  const handleLearn = (deck: Deck) => {
+    router.push(`/${locale}/learning/${deck.category}`);
+  };
 
   const handleViewWords = (deck: Deck) => {
     router.push(`/${locale}/decks/${deck.category}`);
@@ -71,7 +73,7 @@ export default function DeckListPage({
                 isCompleted={false} // TODO
                 locale={locale}
                 buttonLabels={buttonLabels}
-                onLearn={() => handleLearn(false)}
+                onLearn={() => handleLearn(deck)}
                 onViewWords={() => handleViewWords(deck)}
               />
             ))}
