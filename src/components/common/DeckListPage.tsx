@@ -11,6 +11,7 @@ import CustomDialog from '@/components/Dialogs/CustomDialog';
 
 import styles from './DeckListPage.module.scss';
 import { Deck } from '@/types/schemes';
+import { getCategoryKey } from '@/constants/categoryKeys';
 
 export default function DeckListPage({
   decks,
@@ -50,7 +51,7 @@ export default function DeckListPage({
     );
   }, [decks, displayOrder]);
 
-  const getTitle = (category: string) => `category.${category}`;
+  const getTitle = (category: string) => `category.${getCategoryKey(category)}`;
 
   return (
     <>

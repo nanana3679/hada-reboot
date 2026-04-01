@@ -13,6 +13,7 @@ import WordListItemMobile from '@/components/WordListItem/WordListItemMobile';
 import { WordListItem } from '@/types/schemes';
 import styles from './WordListPage.module.scss';
 import { isDifficulty } from '@/types/Category';
+import { getCategoryKey } from '@/constants/categoryKeys';
 import { SpinnerCircular } from 'spinners-react';
 
 export default function WordListPage({
@@ -41,7 +42,7 @@ export default function WordListPage({
 
   const WordListItem = !isLarge ? WordListItemMobile : WordListItemDesktop;
 
-  const title = `category.${category}`;
+  const title = `category.${getCategoryKey(category)}`;
 
   const onLearnClick = () => {
     router.push(`/learning/${category}`);

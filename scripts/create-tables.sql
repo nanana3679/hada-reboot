@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS words (
   pronunciation TEXT,
   frequency REAL,
   meaning_category TEXT,
-  topics TEXT NOT NULL DEFAULT '[]',
+  categories TEXT NOT NULL DEFAULT '[]',
   definition TEXT NOT NULL,
   examples TEXT NOT NULL DEFAULT '[]',
   conjugation TEXT,
