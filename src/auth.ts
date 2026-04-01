@@ -6,7 +6,13 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 export async function getAuth() {
   const { env } = await getCloudflareContext({ async: true });
   return NextAuth({
-    providers: [Google],
+    secret: env.AUTH_SECRET,
+    providers: [
+      Google({
+        clientId: env.AUTH_GOOGLE_ID,
+        clientSecret: env.AUTH_GOOGLE_SECRET,
+      }),
+    ],
     adapter: D1Adapter(env.DB),
     trustHost: true,
   });
