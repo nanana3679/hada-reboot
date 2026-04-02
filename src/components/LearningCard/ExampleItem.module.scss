@@ -14,7 +14,7 @@
 
 .example-item-label {
   color: var(--md-sys-color-secondary);
-  @include tp.label-medium;
+  @include tp.title-small;
 
   @include bp.respond-to('large') {
     @include tp.title-small;
@@ -27,7 +27,7 @@
 
 .example-item-list-text {
   color: var(--md-sys-color-on-surface);
-  @include tp.label-medium;
+  @include tp.body-medium;
 
   @include bp.respond-to('large') {
     @include tp.body-medium;

@@ -20,7 +20,7 @@
   padding: 0 8px;
   gap: 8px;
 
-  @include tp.title-small;
+  @include tp.title-medium;
 
   @include bp.respond-to('large') {
     @include tp.title-medium;
@@ -47,7 +47,7 @@
 
 .conjugation-item-label {
   color: var(--md-sys-color-secondary);
-  @include tp.label-medium;
+  @include tp.title-small;
 
   @include bp.respond-to('large') {
     @include tp.title-small;
@@ -59,7 +59,7 @@
 }
 
 .conjugation-item-word {
-  @include tp.label-medium;
+  @include tp.body-medium;
 
   @include bp.respond-to('large') {
     @include tp.body-medium;

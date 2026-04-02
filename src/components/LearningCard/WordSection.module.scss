@@ -7,15 +7,15 @@
   padding: 0 12px;
 
   .korean-word {
-    @include tp.headline-large;
+    @include tp.display-small;
   }
 
   .korean-homograph-number {
-    @include tp.headline-small;
+    @include tp.headline-medium;
   }
 
   .korean-info-container {
-    @include tp.label-large;
+    @include tp.title-medium;
   }
 
   @include bp.respond-to('large') {
@@ -69,7 +69,7 @@
   gap: 10px;
 
   .foreign-word {
-    @include tp.body-large;
+    @include tp.title-large;
 
     @include bp.respond-to('large') {
       @include tp.title-large;
@@ -82,7 +82,7 @@
 
   .foreign-word-sub {
     padding-left: 0px;
-    @include tp.label-medium;
+    @include tp.title-medium;
 
     @include bp.respond-to('large') {
       @include tp.title-medium;
