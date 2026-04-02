@@ -126,7 +126,7 @@ export default function LearningPage() {
   }
 
   if (!currentCardDetail) {
-    return <div className={styles['page']}>CardDetail Loading...</div>;
+    return <div className={styles['page']}><LoadingSpinner /></div>;
   }
 
   if (!queue) {
