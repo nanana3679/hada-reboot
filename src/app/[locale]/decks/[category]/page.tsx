@@ -7,6 +7,7 @@ import WordListPage from '@/components/common/WordListPage';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 import { Category } from '@/types/Category';
+import { getDbCategory } from '@/constants/categoryKeys';
 import { Locale } from '@/types/Locale';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
@@ -21,7 +22,7 @@ export default function CategoryPage() {
   } = useInfiniteQuery({
     queryKey: ['cards', category, locale],
     queryFn: async ({ pageParam = 1 }) => {
-      const cards = await getCardsFromDeck(locale as Locale, category as Category, pageParam);
+      const cards = await getCardsFromDeck(locale as Locale, getDbCategory(category as string) as Category, pageParam);
       console.log(cards.content.map((c) => c.headword));
       return cards;
     },

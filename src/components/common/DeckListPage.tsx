@@ -38,11 +38,11 @@ export default function DeckListPage({
   );
 
   const handleLearn = (deck: Deck) => {
-    router.push(`/${locale}/learning/${deck.category}`);
+    router.push(`/${locale}/learning/${getCategoryKey(deck.category)}`);
   };
 
   const handleViewWords = (deck: Deck) => {
-    router.push(`/${locale}/decks/${deck.category}`);
+    router.push(`/${locale}/decks/${getCategoryKey(deck.category)}`);
   };
 
   const DeckCard = isCompact ? DeckCardCompact : DeckCardDesktop;

@@ -12,6 +12,7 @@ import CustomDialog from '@/components/Dialogs/CustomDialog';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 import { Category } from '@/types/Category';
+import { getDbCategory } from '@/constants/categoryKeys';
 import { MenuItem } from '@/types/Menu';
 import { Rating } from 'ts-fsrs';
 
@@ -41,7 +42,7 @@ export default function LearningPage() {
     isCompleted,
     error,
     clearError
-  } = useStudyQueue(category as Category);
+  } = useStudyQueue(getDbCategory(category as string) as Category);
 
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);

@@ -90,6 +90,15 @@ export const CATEGORY_KEY_MAP: Record<string, string> = {
   '환경 문제': 'environmental_issues',
 };
 
+const REVERSE_MAP: Record<string, string> = Object.fromEntries(
+  Object.entries(CATEGORY_KEY_MAP).map(([k, v]) => [v, k])
+);
+
 export function getCategoryKey(dbCategory: string): string {
   return CATEGORY_KEY_MAP[dbCategory] ?? dbCategory;
+}
+
+export function getDbCategory(urlKey: string): string {
+  return REVERSE_MAP[urlKey] ?? urlKey;
+}
 }

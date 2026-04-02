@@ -45,7 +45,7 @@ export default function WordListPage({
   const title = `category.${getCategoryKey(category)}`;
 
   const onLearnClick = () => {
-    router.push(`/learning/${category}`);
+    router.push(`/learning/${getCategoryKey(category)}`);
   };
 
   const toggleExpandAll = () => {
