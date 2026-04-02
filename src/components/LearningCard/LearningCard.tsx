@@ -136,7 +136,7 @@ const LearningCard = ({
             </div>
           </div>
         )}
-        {!isCompact && (
+        {!isCompact && menuItems.length > 0 && (
           <div style={{ position: 'absolute', top: 24, right: 24, zIndex: 1000 }}>
             <div style={{ position: 'relative', zIndex: 1000 }}>
               <IconButton id="learning-card-menu-button" onClick={handleMenuClick}>
