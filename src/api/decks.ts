@@ -27,7 +27,7 @@ type UserCardStats = Record<string, {
   newCounts: number;
   learningCounts: number;
   overdueCounts: number;
-  maturityCounts: number;
+  reviewedCounts: number;
 }>;
 
 export const getDecks = async (): Promise<Paginated<Deck>> => {
@@ -72,7 +72,7 @@ export const getDecks = async (): Promise<Paginated<Deck>> => {
           newCounts: sql<number>`sum(case when ${userCards.state} = 0 then 1 else 0 end)`,
           learningCounts: sql<number>`sum(case when ${userCards.state} in (1, 3) then 1 else 0 end)`,
           overdueCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} <= datetime('now') then 1 else 0 end)`,
-          maturityCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} > datetime('now') then 1 else 0 end)`,
+          reviewedCounts: sql<number>`sum(case when ${userCards.state} = 2 and ${userCards.due} > datetime('now') then 1 else 0 end)`,
         })
         .from(userCards)
         .innerJoin(words, eq(userCards.wordId, words.id))
@@ -86,7 +86,7 @@ export const getDecks = async (): Promise<Paginated<Deck>> => {
           newCounts: s.newCounts ?? 0,
           learningCounts: s.learningCounts ?? 0,
           overdueCounts: s.overdueCounts ?? 0,
-          maturityCounts: s.maturityCounts ?? 0,
+          reviewedCounts: s.reviewedCounts ?? 0,
         };
       }
 
@@ -99,15 +99,15 @@ export const getDecks = async (): Promise<Paginated<Deck>> => {
     const stats = userCardStats[category] ?? {
       learningCounts: 0,
       overdueCounts: 0,
-      maturityCounts: 0,
+      reviewedCounts: 0,
     };
     return {
       category,
       cardCounts: cardCounts as number,
-      newCounts: (cardCounts as number) - stats.learningCounts - stats.overdueCounts - stats.maturityCounts,
+      newCounts: (cardCounts as number) - stats.learningCounts - stats.overdueCounts - stats.reviewedCounts,
       learningCounts: stats.learningCounts,
       overdueCounts: stats.overdueCounts,
-      maturityCounts: stats.maturityCounts,
+      reviewedCounts: stats.reviewedCounts,
     };
   });
 

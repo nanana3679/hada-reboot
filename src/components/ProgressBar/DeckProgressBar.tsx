@@ -18,13 +18,13 @@ const DeckProgressBar = ({
   className,
   isExpanded
 }: DeckProgressBarProps) => {
-  const { newCounts, learningCounts, maturityCounts } = deck;
+  const { newCounts, learningCounts, reviewedCounts } = deck;
 
   const progressBarSegments: ProgressBarSegment[] = [
     {
-      value: maturityCounts,
-      label: isExpanded ? maturityCounts : '',
-      tooltip: 'Review',
+      value: reviewedCounts,
+      label: isExpanded ? reviewedCounts : '',
+      tooltip: 'Reviewed',
       color: LEARNING_PROGRESS_BAR_COLORS.Review
     },
     {

@@ -56,7 +56,7 @@ export interface Deck {
   learningCounts: number;
   newCounts: number;
   overdueCounts: number;
-  maturityCounts: number;
+  reviewedCounts: number;
 }
 
 export interface UserStudyHistory {
