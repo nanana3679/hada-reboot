@@ -93,7 +93,6 @@ export default function WordListPage({
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          console.log('load more');
           onLoadMore();
         }
       });

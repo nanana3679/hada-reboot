@@ -71,7 +71,6 @@ export default function LearningPage() {
 
   const handleOnRepeat = async (rating: Rating) => {
     if (index === queue.length - 1) return;
-    console.log('onRepeat');
     setDirection(1);
     setIndex((prev) => prev + 1);
     repeat(rating);

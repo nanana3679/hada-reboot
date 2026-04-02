@@ -24,9 +24,6 @@ const LearningCardSlider = ({ direction, children, index }: LearningCardSliderPr
     })
   };
 
-  useEffect(() => {
-    console.log('index', index);
-  }, [index]);
 
   return (
     <div className={styles.container}>

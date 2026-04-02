@@ -146,7 +146,6 @@ export default function SettingsPage() {
     const fetchOptions = async () => {
       try {
         const response = await getUserOption();
-        console.log(response);
         setUserOptions(response as UserOption);
       } catch (error) {
         showBoundary(error);
@@ -157,7 +156,6 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (!userOptions) return;
-    console.log('userOptions', userOptions);
   }, [userOptions]);
 
   const webView = (

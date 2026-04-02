@@ -12,17 +12,18 @@ export class StudyService {
 
   constructor(initialQueue: CardDetail[]) {
     this.queue = initialQueue.sort((a, b) => this.compareCards(a, b));
-    console.log('initialQueue', this.queue);
   }
 
   public logQueue() {
-    this.queue.forEach((c) =>
-      console.log(
-        `${c.fsrs.due < new Date() ? 'overdue\t' : 'not overdue\t'} ${c.word.headword} ${STATE_MAP[c.fsrs.state]}\t lastRating: ${
-          c.fsrs.lastRating ?? 'null'
-        }`
-      )
-    );
+    if (process.env.NODE_ENV === 'development') {
+      this.queue.forEach((c) =>
+        console.log(
+          `${c.fsrs.due < new Date() ? 'overdue\t' : 'not overdue\t'} ${c.word.headword} ${STATE_MAP[c.fsrs.state]}\t lastRating: ${
+            c.fsrs.lastRating ?? 'null'
+          }`
+        )
+      );
+    }
   }
 
   public get queue(): readonly CardDetail[] {
