@@ -33,10 +33,6 @@ export default function LearningPage() {
         card={cardDetail}
         className={styles['learning-card']}
         cardState={cardState}
-        handleReveal={() => {}}
-        handleShowDetail={() => {}}
-        toggleConjugation={() => {}}
-        toggleExample={() => {}}
         menuItems={[]}
       />
     </div>

@@ -17,7 +17,7 @@ const NounConjugationLabels = [
 
 interface ConjugationSectionProps {
   conjugations: string[];
-  toggleExpanded: () => void;
+  toggleExpanded?: () => void;
   isExpanded: boolean;
 }
 
@@ -34,9 +34,11 @@ const ConjugationSection = ({
   return (
     <div className={styles['conjugations-container']}>
       <div className={styles['conjugations-header']}>
-        <IconButton onClick={toggleExpanded}>
-          <Icon>{isExpanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
-        </IconButton>
+        {toggleExpanded && (
+          <IconButton onClick={toggleExpanded}>
+            <Icon>{isExpanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
+          </IconButton>
+        )}
         <span className={styles['conjugations-header-title']}>{t('learning.conjugations')}</span>
       </div>
       {isExpanded && (

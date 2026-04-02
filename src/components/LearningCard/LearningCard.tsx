@@ -62,8 +62,8 @@ interface LearningCardProps {
   cardState: LearningCardState;
   handleReveal?: () => void;
   handleShowDetail?: () => void;
-  toggleConjugation: () => void;
-  toggleExample: () => void;
+  toggleConjugation?: () => void;
+  toggleExample?: () => void;
   menuItems: MenuItemType[];
 }
 

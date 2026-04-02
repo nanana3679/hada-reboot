@@ -8,7 +8,7 @@ import styles from './ExampleSection.module.scss';
 interface ExampleSectionProps {
   examples: string[];
   isExpanded: boolean;
-  toggleExpanded: () => void;
+  toggleExpanded?: () => void;
 }
 
 const ExampleSection = ({ examples, isExpanded, toggleExpanded }: ExampleSectionProps) => {
@@ -27,9 +27,11 @@ const ExampleSection = ({ examples, isExpanded, toggleExpanded }: ExampleSection
   return (
     <div className={styles['example-container']}>
       <div className={styles['example-header']}>
-        <IconButton onClick={toggleExpanded}>
-          <Icon>{isExpanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
-        </IconButton>
+        {toggleExpanded && (
+          <IconButton onClick={toggleExpanded}>
+            <Icon>{isExpanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
+          </IconButton>
+        )}
         <span className={styles['example-header-title']}>{t('learning.examples')}</span>
       </div>
       {isExpanded && (
