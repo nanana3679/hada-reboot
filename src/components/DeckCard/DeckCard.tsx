@@ -8,6 +8,7 @@ import TextButton from '@/components/material-components/TextButton';
 import { Icon } from '@/components/material-components/IconButton/IconButton';
 
 import { DeckCardProps } from '@/components/DeckCard/types';
+import { getCategoryKey } from '@/constants/categoryKeys';
 
 import { getFormatUnit } from '@/utils/unitFormatter';
 import styles from './DeckCard.module.scss';
@@ -29,7 +30,7 @@ const DeckCard = ({ deck, title, isCompleted, locale, buttonLabels, onLearn }: D
       </div>
       <div className={styles['bottom-contents']}>
         <div className={styles['button-container']}>
-          <Link href={`decks/${deck.category}`}>
+          <Link href={`decks/${getCategoryKey(deck.category)}`}>
             <TextButton>{buttonLabels.viewWords}</TextButton>
           </Link>
           <FilledButton onClick={onLearn}>{buttonLabels.learn}</FilledButton>
