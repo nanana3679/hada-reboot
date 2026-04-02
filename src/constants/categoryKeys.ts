@@ -101,4 +101,3 @@ export function getCategoryKey(dbCategory: string): string {
 export function getDbCategory(urlKey: string): string {
   return REVERSE_MAP[urlKey] ?? urlKey;
 }
-}
