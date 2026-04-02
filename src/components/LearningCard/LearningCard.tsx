@@ -15,6 +15,39 @@ import { MenuItem as MenuItemType } from '@/types/Menu';
 import { useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
 
+/**
+ * "가감한[가감한], 가감하여[가감하여](가감해[가감해]), ..."
+ * → ["가감한[가감한]", "가감하여[가감하여](가감해[가감해])", ...]
+ */
+function parseConjugations(raw: string | null | undefined): string[] {
+  if (!raw) return [];
+  // 괄호/대괄호 밖의 ", "로만 분리
+  const result: string[] = [];
+  let depth = 0;
+  let current = '';
+  for (const ch of raw) {
+    if (ch === '(' || ch === '[') depth++;
+    else if (ch === ')' || ch === ']') depth--;
+    if (ch === ',' && depth === 0) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) result.push(current.trim());
+  return result;
+}
+
+/**
+ * ["<구> 가감한 금액.\n<구> 가감한 돈.\n<문장> ..."]
+ * → ["<구> 가감한 금액.", "<구> 가감한 돈.", "<문장> ..."]
+ */
+function parseExamples(raw: string[] | null | undefined): string[] {
+  if (!raw || raw.length === 0) return [];
+  return raw.flatMap((s) => s.split('\n')).filter(Boolean);
+}
+
 export interface LearningCardState {
   isRevealed: boolean;
   showDetail: boolean;
@@ -87,12 +120,12 @@ const LearningCard = ({
             <WordSection card={card} />
             <div>
               <ConjugationSection
-                conjugations={card.conjugation?.split(', ') ?? []}
+                conjugations={parseConjugations(card.conjugation)}
                 toggleExpanded={toggleConjugation}
                 isExpanded={cardState.showConjugation}
               />
               <ExampleSection
-                examples={card.examples ?? []}
+                examples={parseExamples(card.examples)}
                 toggleExpanded={toggleExample}
                 isExpanded={cardState.showExample}
               />
