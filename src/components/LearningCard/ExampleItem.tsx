@@ -17,9 +17,9 @@ const ExampleItem = ({ title, examples }: ExampleItemProps) => {
       </div>
       <span className={styles['example-item-list']}>
         {examples.map((example, index) => (
-          <div className={styles['example-item-list-text']} key={index}>
-            <span>{example}</span>
-          </div>
+          <p className={styles['example-item-list-text']} key={index}>
+            {example}
+          </p>
         ))}
       </span>
     </div>
