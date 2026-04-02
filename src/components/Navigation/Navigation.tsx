@@ -64,7 +64,7 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           headline="HADA"
           leftIcon="arrow_back"
           rightIcon={null}
-          onClickLeftIcon={() => {}}
+          onClickLeftIcon={() => router.back()}
         />
         <NavigationBar
           destinations={destinations}
