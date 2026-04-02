@@ -12,6 +12,8 @@
   "showForeign": "แสดงภาษาไทย",
   "expandAll": "ขยายทั้งหมด",
   "collapseAll": "ยุบทั้งหมด",
+  "sortByStudyState": "เรียงตามสถานะการเรียน",
+  "sortByAlphabetical": "เรียงตามตัวอักษร",
   "loginError": "ข้อผิดพลาดในการเข้าสู่ระบบ",
   "loginErrorContent": "เกิดปัญหาระหว่างเข้าสู่ระบบ กด OK เพื่อไปยังหน้าล็อกอิน",
   "cancel": "ยกเลิก",

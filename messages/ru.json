@@ -12,6 +12,8 @@
   "showForeign": "Показать русский",
   "expandAll": "Развернуть все",
   "collapseAll": "Свернуть все",
+  "sortByStudyState": "Сортировать по статусу обучения",
+  "sortByAlphabetical": "Сортировать по алфавиту",
   "loginError": "Ошибка входа",
   "loginErrorContent": "Произошла ошибка при входе. Нажмите OK, чтобы перейти на страницу входа.",
   "cancel": "Отмена",

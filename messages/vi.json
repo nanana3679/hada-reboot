@@ -12,6 +12,8 @@
   "showForeign": "Hiển thị tiếng Việt",
   "expandAll": "Mở rộng tất cả",
   "collapseAll": "Thu gọn tất cả",
+  "sortByStudyState": "Sắp xếp theo trạng thái học",
+  "sortByAlphabetical": "Sắp xếp theo bảng chữ cái",
   "loginError": "Lỗi đăng nhập",
   "loginErrorContent": "Đã xảy ra sự cố khi đăng nhập. Nhấn OK để đến trang đăng nhập.",
   "cancel": "Hủy",

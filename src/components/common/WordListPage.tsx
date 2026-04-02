@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useWindowSize } from '@/hooks/useWindowSize';
@@ -36,6 +36,24 @@ export default function WordListPage({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHideKorean, setIsHideKorean] = useState(false);
   const [isHideForeign, setIsHideForeign] = useState(false);
+  const [sortBy, setSortBy] = useState<'default' | 'studyState' | 'alphabetical'>('default');
+
+  const sortedWordList = useMemo(() => {
+    if (sortBy === 'default') return wordList;
+    const sorted = [...wordList];
+    if (sortBy === 'studyState') {
+      // reviewed(2) → learning/relearning(1,3) → new(null,0)
+      const stateOrder = (state: number | null) => {
+        if (state === 2) return 0;
+        if (state === 1 || state === 3) return 1;
+        return 2;
+      };
+      sorted.sort((a, b) => stateOrder(a.studyState) - stateOrder(b.studyState));
+    } else if (sortBy === 'alphabetical') {
+      sorted.sort((a, b) => a.headword.localeCompare(b.headword, 'ko'));
+    }
+    return sorted;
+  }, [wordList, sortBy]);
 
   const isCompact = width < 600;
   const isLarge = width >= 1200;
@@ -103,8 +121,8 @@ export default function WordListPage({
         >
           {!isLarge && <MenuItem onClick={toggleExpandAll}>{t('expandAll')}</MenuItem>}
           {!isLarge && <MenuItem onClick={toggleCollapseAll}>{t('collapseAll')}</MenuItem>}
-          <MenuItem>Sort by xxx</MenuItem>
-          <MenuItem>Sort by xxx</MenuItem>
+          <MenuItem onClick={() => setSortBy('studyState')}>{t('sortByStudyState')}</MenuItem>
+          <MenuItem onClick={() => setSortBy('alphabetical')}>{t('sortByAlphabetical')}</MenuItem>
           {isLarge && (
             <MenuItem onClick={toggleHideKorean}>
               {isHideKorean ? t('showKorean') : t('hideKorean')}
@@ -133,7 +151,7 @@ export default function WordListPage({
           </div>
         </div>
         <div className={`${styles['list-container']} .word-list`}>
-          {wordList.map((word, index) => (
+          {sortedWordList.map((word, index) => (
             <WordListItem
               key={index}
               headword={word.headword}

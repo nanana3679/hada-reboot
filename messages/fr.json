@@ -12,6 +12,8 @@
   "showForeign": "Afficher le français",
   "expandAll": "Tout développer",
   "collapseAll": "Tout réduire",
+  "sortByStudyState": "Trier par état d'étude",
+  "sortByAlphabetical": "Trier par ordre alphabétique",
   "loginError": "Erreur de connexion",
   "loginErrorContent": "Un problème est survenu lors de la connexion. Appuyez sur OK pour accéder à la page de connexion.",
   "cancel": "Annuler",

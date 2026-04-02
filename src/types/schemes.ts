@@ -36,6 +36,7 @@ export interface WordListItem {
   homographNumber: number;
   categories: string[];
   translation: string;
+  studyState: number | null; // null=new, 0=new, 1=learning, 2=review, 3=relearning
 }
 
 export type CardState = {

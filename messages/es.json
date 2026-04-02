@@ -12,6 +12,8 @@
   "showForeign": "Mostrar español",
   "expandAll": "Expandir todo",
   "collapseAll": "Colapsar todo",
+  "sortByStudyState": "Ordenar por estado de estudio",
+  "sortByAlphabetical": "Ordenar alfabéticamente",
   "loginError": "Error de inicio de sesión",
   "loginErrorContent": "Hubo un problema al iniciar sesión. Pulsa OK para ir a la página de inicio de sesión.",
   "cancel": "Cancelar",

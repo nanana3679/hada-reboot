@@ -116,6 +116,7 @@ export const getDecks = async (): Promise<Paginated<Deck>> => {
 
 export const getCardsFromDeck = async (locale: Locale, category: Category, page: number): Promise<Paginated<WordListItem>> => {
   const db = await getDb();
+  const userId = await getUserId();
   const pageSize = 100;
   const offset = (page - 1) * pageSize;
 
@@ -134,11 +135,16 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
         homographNumber: words.homographNumber,
         categories: words.categories,
         translation: translations.translation,
+        studyState: userCards.state,
       })
       .from(words)
       .leftJoin(
         translations,
         and(eq(translations.wordId, words.id), eq(translations.langCode, locale))
+      )
+      .leftJoin(
+        userCards,
+        and(eq(userCards.wordId, words.id), userId ? eq(userCards.userId, userId) : sql`0`)
       )
       .where(whereCondition)
       .orderBy(words.id)
@@ -153,6 +159,7 @@ export const getCardsFromDeck = async (locale: Locale, category: Category, page:
     homographNumber: r.homographNumber,
     categories: r.categories,
     translation: r.translation?.[0] ?? '',
+    studyState: r.studyState,
   }));
 
   return { size: countResult?.count ?? 0, pageSize, page, content };

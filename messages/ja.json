@@ -12,6 +12,8 @@
   "showForeign": "日本語を表示",
   "expandAll": "すべて展開",
   "collapseAll": "すべて折りたたむ",
+  "sortByStudyState": "学習状態順",
+  "sortByAlphabetical": "あいうえお順",
   "loginError": "ログインエラー",
   "loginErrorContent": "ログイン中に問題が発生しました。「OK」を押してログインページへ進んでください。",
   "cancel": "キャンセル",
