@@ -22,7 +22,7 @@ export default function LearningPage() {
 
   const { data: cardDetail, isLoading } = useQuery({
     queryKey: ['card', cardId],
-    queryFn: () => getWord(+cardId)
+    queryFn: () => getWord(+(cardId!))
   });
 
   if (isLoading || !cardDetail) return <div>Loading...</div>;
