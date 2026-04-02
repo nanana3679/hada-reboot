@@ -119,16 +119,20 @@ const LearningCard = ({
           <div className={classNames(styles['content-container'], styles['detailed'])}>
             <WordSection card={card} />
             <div>
-              <ConjugationSection
-                conjugations={parseConjugations(card.conjugation)}
-                toggleExpanded={toggleConjugation}
-                isExpanded={cardState.showConjugation}
-              />
-              <ExampleSection
-                examples={parseExamples(card.examples)}
-                toggleExpanded={toggleExample}
-                isExpanded={cardState.showExample}
-              />
+              {card.conjugation && (
+                <ConjugationSection
+                  conjugations={parseConjugations(card.conjugation)}
+                  toggleExpanded={toggleConjugation}
+                  isExpanded={cardState.showConjugation}
+                />
+              )}
+              {card.examples.length > 0 && (
+                <ExampleSection
+                  examples={parseExamples(card.examples)}
+                  toggleExpanded={toggleExample}
+                  isExpanded={cardState.showExample}
+                />
+              )}
             </div>
           </div>
         )}
