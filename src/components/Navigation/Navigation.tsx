@@ -52,9 +52,6 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           <Icon>more_vert</Icon>
         </IconButton>
         <Menu id="menu" anchor="menu-button" anchorCorner="end-start" xOffset={-4} yOffset={4}>
-          <MenuItem>사과</MenuItem>
-          <MenuItem>바나나</MenuItem>
-          <MenuItem>오렌지</MenuItem>
         </Menu>
       </div>
     );
@@ -66,7 +63,7 @@ const Navigation = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         <TopAppBar
           headline="HADA"
           leftIcon="arrow_back"
-          rightIcon={<MenuButton />}
+          rightIcon={null}
           onClickLeftIcon={() => {}}
         />
         <NavigationBar
