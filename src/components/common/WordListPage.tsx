@@ -14,6 +14,7 @@ import { WordListItem } from '@/types/schemes';
 import styles from './WordListPage.module.scss';
 import { isDifficulty } from '@/types/Category';
 import { getCategoryKey } from '@/constants/categoryKeys';
+import CircularProgress from '@/components/material-components/CircularProgress';
 
 export default function WordListPage({
   wordList,
@@ -166,7 +167,7 @@ export default function WordListPage({
             <div className={styles['load-more']} ref={loadTriggerRef}>
               {isLoading ? (
                 <div className={styles['loading-spinner']}>
-                  <md-circular-progress indeterminate />
+                  <CircularProgress indeterminate />
                 </div>
               ) : (
                 'Load More'
