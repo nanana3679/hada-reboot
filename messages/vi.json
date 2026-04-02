@@ -204,5 +204,14 @@
 
   "decks": {
     "title": "Bộ thẻ"
+  },
+
+  "error": {
+    "title": "Đã xảy ra lỗi",
+    "description": "Vui lòng thử lại sau.",
+    "retry": "Thử lại",
+    "home": "Về trang chủ",
+    "notFound": "Không tìm thấy trang",
+    "notFoundDescription": "Trang bạn đang tìm kiếm không tồn tại."
   }
 }

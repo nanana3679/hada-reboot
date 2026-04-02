@@ -204,5 +204,14 @@
 
   "decks": {
     "title": "Decks"
+  },
+
+  "error": {
+    "title": "Something went wrong",
+    "description": "Please try again later.",
+    "retry": "Retry",
+    "home": "Go home",
+    "notFound": "Page not found",
+    "notFoundDescription": "The page you're looking for doesn't exist."
   }
 }

@@ -204,5 +204,14 @@
 
   "decks": {
     "title": "デッキ"
+  },
+
+  "error": {
+    "title": "問題が発生しました",
+    "description": "しばらくしてからもう一度お試しください。",
+    "retry": "再試行",
+    "home": "ホームへ",
+    "notFound": "ページが見つかりません",
+    "notFoundDescription": "お探しのページは存在しません。"
   }
 }

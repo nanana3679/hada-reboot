@@ -204,5 +204,14 @@
 
   "decks": {
     "title": "Paquets"
+  },
+
+  "error": {
+    "title": "Une erreur s'est produite",
+    "description": "Veuillez réessayer plus tard.",
+    "retry": "Réessayer",
+    "home": "Accueil",
+    "notFound": "Page introuvable",
+    "notFoundDescription": "La page que vous recherchez n'existe pas."
   }
 }

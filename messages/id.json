@@ -204,5 +204,14 @@
 
   "decks": {
     "title": "Dek"
+  },
+
+  "error": {
+    "title": "Terjadi kesalahan",
+    "description": "Silakan coba lagi nanti.",
+    "retry": "Coba lagi",
+    "home": "Ke beranda",
+    "notFound": "Halaman tidak ditemukan",
+    "notFoundDescription": "Halaman yang Anda cari tidak ada."
   }
 }

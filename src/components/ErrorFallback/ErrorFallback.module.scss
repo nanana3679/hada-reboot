@@ -120,7 +120,7 @@
   background-color: var(--md-sys-color-surface-container);
 }
 
-/* --- action button --- */
+/* --- action buttons --- */
 
 .actions {
   display: flex;
@@ -129,62 +129,7 @@
   animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
   position: relative;
   z-index: 1;
-}
-
-.retry-button {
-  @include tp.label-large;
-  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 28px;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  transition:
-    background-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.1s;
-
-  background-color: var(--md-sys-color-error);
-  color: var(--md-sys-color-on-error);
-
-  &:hover {
-    box-shadow:
-      0 1px 3px 1px rgba(0, 0, 0, 0.15),
-      0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  }
-
-  &:active {
-    transform: scale(0.97);
-  }
-}
-
-.retry-icon {
-  font-size: 18px;
-}
-
-.home-button {
-  @include tp.label-large;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 28px;
-  border: 1px solid var(--md-sys-color-outline);
-  border-radius: 20px;
-  cursor: pointer;
-  background: transparent;
-  color: var(--md-sys-color-on-surface);
-  transition:
-    background-color 0.2s,
-    transform 0.1s;
-
-  &:hover {
-    background-color: var(--md-sys-color-surface-container);
-  }
-
-  &:active {
-    transform: scale(0.97);
-  }
 }
 
 @keyframes fade-up {

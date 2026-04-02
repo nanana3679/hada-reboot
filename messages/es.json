@@ -204,5 +204,14 @@
 
   "decks": {
     "title": "Mazos"
+  },
+
+  "error": {
+    "title": "Algo salió mal",
+    "description": "Por favor, inténtalo de nuevo más tarde.",
+    "retry": "Reintentar",
+    "home": "Ir al inicio",
+    "notFound": "Página no encontrada",
+    "notFoundDescription": "La página que buscas no existe."
   }
 }
